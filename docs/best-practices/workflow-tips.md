@@ -12,11 +12,21 @@ Maximize your productivity with Claude Code.
 
 For complex tasks, switch to plan mode:
 
-1. Open `/config` or click the mode indicator
+1. Press `Shift+Tab` to cycle through modes, or open `/config`
 2. Select "Plan Mode"
 3. Describe your task
 4. Claude creates a plan without writing code
 5. Review, refine, then switch to execution
+
+### Keyboard Shortcuts
+
+Press `Shift+Tab` to quickly cycle through modes:
+
+| Mode | Description |
+|------|-------------|
+| **Normal** | Standard operation with permission prompts |
+| **Plan Mode** | Claude researches and plans without making changes |
+| **Auto-accept** | Bypass permission prompts (use with caution) |
 
 **Why it works**: Iterating on a plan is faster than iterating on code. A good plan often leads to one-shot implementation.
 
