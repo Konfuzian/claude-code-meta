@@ -10,7 +10,7 @@ Methodologies and skill collections for effective AI-assisted development.
 
 **An agentic skills framework & software development methodology.**
 
-[GitHub](https://github.com/obra/superpowers) | 32k+ stars | Disciplined development
+[GitHub](https://github.com/obra/superpowers) | 32k+ stars | TDD-enforced | Disciplined development
 
 ### Overview
 
@@ -18,23 +18,40 @@ superpowers provides a structured approach to AI-assisted development that makes
 
 The core insight: AI agents can learn reusable capabilities by reading markdown "SKILL.md" files that document specific workflows. These become **mandatory** patterns rather than optional suggestions.
 
+**The Iron Law:**
+> "NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST"
+
 ### Key Features
 
 | Feature | Description |
 |---------|-------------|
-| **14 Built-in Skills** | Brainstorming, planning, TDD, debugging, code review, and more |
-| **Mandatory TDD** | Iron Law: "NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST" |
-| **Subagent-Driven Development** | Fresh subagents per task with two-stage review |
+| **21 Built-in Skills** | Development, planning, debugging, review, docs, git, and more |
+| **Mandatory TDD** | Enforced RED-GREEN-REFACTOR cycles |
+| **Subagent Architecture** | Fresh subagents per task with two-stage review |
 | **Parallel Agent Dispatch** | Coordinate multiple agents simultaneously |
 | **Git Worktrees** | Isolated development branches for parallel work |
+| **Marketplace Support** | Install additional skills from community |
 
-### Core Workflow Commands
+### Available Skills
+
+| Category | Skills |
+|----------|--------|
+| **Development** | `tdd`, `implement-feature`, `refactor`, `code-review` |
+| **Planning** | `brainstorm`, `write-plan`, `execute-plan`, `break-down-task` |
+| **Debugging** | `debug`, `investigate-issue`, `fix-bug` |
+| **Documentation** | `document`, `update-readme`, `generate-api-docs` |
+| **Git** | `commit`, `create-pr`, `review-changes` |
+| **Testing** | `write-tests`, `increase-coverage`, `fix-failing-tests` |
+| **Analysis** | `analyze-codebase`, `find-patterns`, `security-review` |
+
+### Core Commands
 
 | Command | Purpose |
 |---------|---------|
-| `/superpowers:brainstorm` | Interactive design refinement through Socratic questioning |
+| `/superpowers:brainstorm` | Socratic questioning to refine design |
 | `/superpowers:write-plan` | Create detailed implementation plans |
-| `/superpowers:execute-plan` | Execute plans in batches with oversight |
+| `/superpowers:execute-plan` | Execute in batches with oversight |
+| `/superpowers:tdd` | Strict RED-GREEN-REFACTOR cycle |
 
 ### The Seven-Phase Workflow
 
@@ -86,11 +103,14 @@ The framework enforces strict TDD with the RED-GREEN-REFACTOR cycle:
 
 **A lightweight meta-prompting, context engineering and spec-driven development system.**
 
-[GitHub](https://github.com/glittercowboy/get-shit-done) | 5.7k stars | Solo developers
+[GitHub](https://github.com/glittercowboy/get-shit-done) | 5.7k stars | Solo developers | Context engineering
 
 ### Overview
 
 get-shit-done (GSD) solves **context rot** — the quality degradation that occurs as Claude fills its context window during development sessions. It uses strategic file management to keep main context at 30-40% utilization while spawning parallel subagents with fresh 200k-token contexts.
+
+**The Core Problem:**
+> Claude starts hallucinating and making bad decisions when context fills up. GSD keeps you in the "smart zone."
 
 **Target User:** Solo developers who rely on Claude Code to write their code.
 
@@ -109,9 +129,13 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 
 ### Workflow Modes
 
-- **Full Planning Mode** (`/gsd:new-project`) — Complete spec-driven development
-- **Quick Mode** (`/gsd:quick`) — Fast ad-hoc tasks with same guarantees
-- **Debug Mode** (`/gsd:debug`) — Systematic debugging with persistent state
+| Mode | Command | Purpose |
+|------|---------|---------|
+| **Full Planning** | `/gsd:new-project` | Complete spec-driven development |
+| **Quick Mode** | `/gsd:quick` | Fast ad-hoc tasks with same guarantees |
+| **Debug Mode** | `/gsd:debug` | Systematic debugging with persistent state |
+| **Resume** | `/gsd:resume` | Continue from STATE.md |
+| **Checkpoint** | `/gsd:checkpoint` | Save progress for later |
 
 ### The Six-Step Cycle
 

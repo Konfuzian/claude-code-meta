@@ -8,50 +8,73 @@ Tools for coordinating multiple Claude agents and creating autonomous developmen
 
 ## claude-flow
 
-**Enterprise-grade multi-agent AI orchestration platform.**
+**Enterprise-grade multi-agent AI orchestration platform (v3).**
 
-[GitHub](https://github.com/ruvnet/claude-flow) | 54+ specialized agents | Multi-agent swarms
+[GitHub](https://github.com/ruvnet/claude-flow) | 54+ specialized agents | Multi-agent swarms | Self-learning
 
 ### Overview
 
-claude-flow transforms Claude Code from a single-agent assistant into a coordinated multi-agent development platform. It enables deploying intelligent multi-agent swarms with self-learning neural capabilities.
+Claude-Flow v3 is a comprehensive AI agent orchestration framework that transforms Claude Code into a multi-agent development platform. It coordinates specialized AI agents working together on complex software engineering tasks with self-learning capabilities and fault-tolerant consensus.
+
+**Key Stats:**
+- 84.8% SWE-Bench solve rate
+- 2.8-4.4x faster task completion
+- Supports Claude, GPT, Gemini, Cohere, Ollama with automatic failover
 
 ### Key Features
 
 | Feature | Description |
 |---------|-------------|
-| **54+ Specialized Agents** | Coder, tester, reviewer, architect, security-auditor, performance-engineer, and more |
-| **Swarm Topologies** | Hierarchical (queen-led), mesh networks, ring/star, adaptive hybrid |
-| **Self-Learning (RuVector)** | SONA neural architecture with &lt;0.05ms adaptation |
-| **Memory & Persistence** | Vector database with PostgreSQL, cross-session context restoration |
-| **Multi-Provider LLM** | Claude, GPT, Gemini, Cohere, Ollama with automatic failover |
-| **Three-Tier Routing** | Agent Booster (WASM) → Haiku → Sonnet/Opus based on task complexity |
+| **54+ Specialized Agents** | Coder, tester, reviewer, architect, security-auditor, optimizer, documenter, and more |
+| **Swarm Topologies** | Hierarchical (queen-led), mesh, ring, star — configurable |
+| **Hive Mind** | Strategic/Tactical/Adaptive queens coordinate 8 worker types |
+| **Self-Learning (RuVector)** | SONA neural architecture with &lt;0.05ms adaptation, 150x-12,500x faster retrieval |
+| **Consensus Algorithms** | Majority voting, weighted (Queen 3x), Byzantine Fault Tolerant (f &lt; n/3), Raft, Gossip |
+| **Memory & Persistence** | HNSW vector memory, AgentDB, SQLite with WAL, LRU cache |
+| **Multi-Provider LLM** | Claude, GPT, Gemini, Cohere, Ollama — automatic failover and cost-based routing |
+| **Three-Tier Routing** | Agent Booster (WASM, &lt;1ms) → Haiku/Sonnet (~500ms) → Opus+Swarm (2-5s) |
+| **Background Workers** | 12 context-triggered workers auto-dispatch on file changes and patterns |
 
-### Agent Classifications
+### Architecture
 
-| Type | Role |
-|------|------|
-| **Coordinators** | Queens that manage and delegate work |
-| **Developers** | Code implementation specialists |
-| **Testers** | Test writing and execution |
-| **Analyzers** | Code analysis and metrics |
-| **Security** | Vulnerability scanning, CVE remediation |
-| **Synchronizers** | Cross-agent coordination |
-| **Specialists** | Domain-specific expertise |
+```
+User → Claude-Flow (CLI/MCP) → Router → Swarm → Agents → Memory → LLM Providers
+                       ↑                          ↓
+                       └──── Learning Loop ←──────┘
+```
+
+### Queen Types & Workers
+
+| Queen Type | Role |
+|-----------|------|
+| **Strategic** | High-level planning and coordination |
+| **Tactical** | Execution management |
+| **Adaptive** | Optimization and learning |
+
+| Worker Type | Role |
+|-------------|------|
+| Researcher | Investigation and analysis |
+| Coder | Code implementation |
+| Tester | Test writing and validation |
+| Reviewer | Code quality checks |
+| Architect | System design |
+| Analyst | Metrics and analysis |
+| Optimizer | Performance tuning |
+| Documenter | Documentation |
 
 ### Coordination Mechanisms
 
-- **Consensus Algorithms**: Majority voting, weighted voting (Queen 3x influence), Byzantine Fault Tolerant, Raft
-- **Anti-Drift Safeguards**: Single coordinator enforces alignment, max 8 agents recommended
-- **Background Workers**: 12 context-triggered workers auto-dispatch on file changes, pattern detection, session events
+- **Consensus**: Majority, Weighted (Queen 3x), Byzantine (f &lt; n/3), Raft, Gossip, CRDT
+- **Anti-Drift**: Single coordinator enforces alignment, max 8 agents recommended
+- **Collective Memory**: Shared knowledge base with LRU cache and SQLite persistence
 
 ### Quick Start
 
 ```bash
-# Install claude-flow v3
+# Install (requires Node.js 18+ or Bun 1.0+)
 npm install claude-flow@v3alpha
 
-# Initialize the project
+# Initialize
 npx claude-flow@v3alpha init
 
 # Add as MCP server
@@ -61,6 +84,16 @@ claude mcp add claude-flow -- npx -y claude-flow@v3alpha
 npx claude-flow@v3alpha mcp start
 ```
 
+### Cost Optimization
+
+Smart routing can extend Claude Code subscription by ~250%:
+
+| Task Complexity | Handler | Speed | Cost |
+|-----------------|---------|-------|------|
+| Simple | Agent Booster (WASM) | &lt;1ms | Free |
+| Medium | Haiku/Sonnet | ~500ms | Low |
+| Complex | Opus + Swarm | 2-5s | Standard |
+
 ### When to Use
 
 - Large codebase refactoring with parallel workers
@@ -68,10 +101,11 @@ npx claude-flow@v3alpha mcp start
 - Building and testing across multiple components
 - Complex workflows needing agent coordination
 - Teams wanting to scale AI-assisted development
+- Multi-provider environments needing automatic failover
 
 ### Considerations
 
-- Highest complexity among ecosystem tools (250k+ lines)
+- Highest complexity among ecosystem tools (8,600+ files)
 - Requires Claude Code as foundational layer
 - v3alpha is pre-release — stability improvements ongoing
 - PostgreSQL recommended for optimal RuVector performance
@@ -81,13 +115,18 @@ npx claude-flow@v3alpha mcp start
 
 ## ralph-claude-code
 
-**Autonomous AI development loop with intelligent exit detection.**
+**Autonomous AI development loop with intelligent exit detection (v0.10.0).**
 
-[GitHub](https://github.com/frankbria/ralph-claude-code) | Autonomous loops | Walk-away development
+[GitHub](https://github.com/frankbria/ralph-claude-code) | Autonomous loops | Walk-away development | 308 tests
 
 ### Overview
 
 ralph-claude-code implements the "Ralph Wiggum" technique — an autonomous development loop where Claude continues working until the task is complete. Named after Geoffrey Huntley's technique (itself named after the Simpsons character), it enables "walk away" development.
+
+**The Core Loop:**
+```bash
+while :; do cat PROMPT.md | claude ; done
+```
 
 **Real-World Results:**
 - 6 repositories generated overnight in Y Combinator hackathon testing
@@ -102,8 +141,10 @@ ralph-claude-code implements the "Ralph Wiggum" technique — an autonomous deve
 | **Rate Limiting** | 100 API calls/hour (configurable), automatic hourly resets |
 | **Circuit Breaker** | Opens after 3 loops with no progress or 5 loops with repeated errors |
 | **Session Continuity** | 24-hour session persistence via `--continue` flag |
-| **Live Monitoring** | tmux-based real-time dashboard |
-| **Multi-Format Import** | Markdown, Text, JSON, Word (.docx), PDF specifications |
+| **Live Monitoring** | tmux-based real-time dashboard (`ralph --monitor`) |
+| **PRD Import** | Convert Markdown, Text, JSON, Word (.docx), PDF to Ralph format |
+| **JSON Output** | `--output-format json` for structured responses |
+| **5-Hour Limit Handling** | Detects Claude's usage limit, prompts to wait or exit |
 
 ### The Loop Pattern
 
@@ -135,9 +176,14 @@ cd ralph-claude-code
 ./install.sh
 
 # Per-project setup
-ralph-import requirements.md my-project
+ralph-import requirements.md my-project  # Convert PRD to Ralph format
 cd my-project
-ralph --monitor
+ralph --monitor                          # Start with tmux dashboard
+
+# Other commands
+ralph --continue                        # Resume 24-hour session
+ralph-reset                             # Clear state/logs
+ralph-validate                          # Check configuration
 ```
 
 ### Project Structure
@@ -201,3 +247,96 @@ my-project/
 - You want Claude to work autonomously until done
 - You trust the loop to self-correct through iteration
 - Overnight "walk away" development is acceptable
+
+---
+
+## The Ralph Playbook
+
+**Comprehensive guide to the Ralph Wiggum autonomous development technique.**
+
+[GitHub](https://github.com/ghuntley/how-to-ralph-wiggum) | Methodology documentation | Geoffrey Huntley's original technique
+
+### Overview
+
+The Ralph Playbook documents the original technique that inspired ralph-claude-code. It provides detailed methodology for autonomous Claude development with a focus on **context engineering** — keeping the agent in its "smart zone" through strategic file management.
+
+### The Three Phases
+
+| Phase | Mode | Purpose |
+|-------|------|---------|
+| **1. Define Requirements** | LLM conversation | Break JTBD into specs, one per topic of concern |
+| **2. Planning** | `PROMPT_plan.md` | Gap analysis: specs vs code → prioritized TODO list |
+| **3. Building** | `PROMPT_build.md` | Implement, test, commit, update plan |
+
+### Key Principles
+
+**Context is Everything:**
+- 200K+ tokens advertised ≈ 176K truly usable
+- 40-60% utilization is the "smart zone"
+- One task per loop = 100% smart zone utilization
+
+**Steering Ralph:**
+- **Upstream**: Specs, utilities, and code patterns guide generation
+- **Downstream**: Tests, typechecks, builds create backpressure
+- **Let Ralph Ralph**: Trust self-correction through iteration
+
+### File Structure
+
+```
+project/
+├── loop.sh                    # Outer loop script
+├── PROMPT_plan.md             # Planning mode instructions
+├── PROMPT_build.md            # Building mode instructions
+├── AGENTS.md                  # Operational guide (how to build/test)
+├── IMPLEMENTATION_PLAN.md     # Prioritized tasks (Ralph-generated)
+├── specs/                     # One spec per JTBD topic
+│   └── [topic].md
+└── src/                       # Source code
+```
+
+### The Loop
+
+```bash
+#!/bin/bash
+while true; do
+    cat "$PROMPT_FILE" | claude -p \
+        --dangerously-skip-permissions \
+        --output-format=stream-json \
+        --model opus \
+        --verbose
+
+    git push origin "$CURRENT_BRANCH"
+    echo "======================== LOOP COMPLETE ========================"
+done
+```
+
+### Prompt Patterns
+
+The playbook identifies key language patterns that improve reliability:
+
+| Pattern | Purpose |
+|---------|---------|
+| "study" | More thorough than "read" or "look at" |
+| "don't assume not implemented" | Critical — the Achilles' heel |
+| "using parallel subagents" | Fan out to preserve main context |
+| "only 1 subagent for build/tests" | Backpressure control |
+| "Ultrathink" | Triggers deeper reasoning |
+| "capture the why" | Documentation quality |
+
+### When to Use
+
+- Learning the Ralph technique from the source
+- Understanding context engineering principles
+- Customizing ralph-claude-code for your workflow
+- Building your own autonomous loop implementation
+
+### Relation to ralph-claude-code
+
+| Aspect | Ralph Playbook | ralph-claude-code |
+|--------|----------------|-------------------|
+| **Type** | Methodology documentation | Implementation |
+| **Author** | Geoffrey Huntley | Frank Bria |
+| **Focus** | Principles and patterns | Tooling and automation |
+| **Exit Detection** | Manual/prompt-based | Automated dual-gate |
+| **Rate Limiting** | None built-in | 100/hour with circuit breaker |
+| **Best For** | Understanding the technique | Running it in practice |

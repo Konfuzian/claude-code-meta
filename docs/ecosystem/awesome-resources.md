@@ -36,6 +36,68 @@ The definitive community-maintained list of Claude Code resources. Regularly upd
 
 ---
 
+## awesome-claude-agents
+
+**Supercharge Claude Code with a team of 24 specialized AI agents.**
+
+[GitHub](https://github.com/vijaythecoder/awesome-claude-agents) | Token-intensive | Multi-agent orchestration
+
+### Overview
+
+A collection of specialized agents that work together to build complete features. The agents auto-detect your tech stack and coordinate appropriate specialists.
+
+**Warning:** Token-intensive — can consume 10-50k tokens per complex feature.
+
+### Agent Types
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| **Orchestrators** | 3 | Tech Lead, Project Analyst, Team Configurator |
+| **Framework Specialists** | 13 | Laravel, Django, Rails, React, Vue experts |
+| **Universal Experts** | 4 | Backend, Frontend, API Architect, Tailwind |
+| **Core Team** | 4 | Code Archaeologist, Reviewer, Performance, Docs |
+
+### Framework Coverage
+
+| Framework | Agents |
+|-----------|--------|
+| **Laravel** | Backend Expert, Eloquent Expert |
+| **Django** | Backend, API Developer, ORM Expert |
+| **Rails** | Backend, API Developer, ActiveRecord |
+| **React** | Component Architect, Next.js Expert |
+| **Vue** | Component Architect, Nuxt Expert, State Manager |
+
+### Quick Start
+
+```bash
+# Clone and install
+git clone https://github.com/vijaythecoder/awesome-claude-agents.git
+mkdir -p ~/.claude/agents
+ln -sf "$(pwd)/awesome-claude-agents/agents/" ~/.claude/agents/awesome-claude-agents
+
+# Configure your project
+claude "use @agent-team-configurator and optimize my project"
+
+# Start building
+claude "use @agent-tech-lead-orchestrator and build a user authentication system"
+```
+
+### How It Works
+
+1. **@agent-team-configurator** detects your stack (package.json, composer.json, etc.)
+2. Updates CLAUDE.md with "AI Team Configuration" section
+3. Maps tasks to appropriate specialist agents
+4. Orchestrator coordinates multi-agent work
+
+### Considerations
+
+- **Token Intensive**: 10-50k tokens for complex workflows
+- **Requires Claude subscription**: Heavy usage
+- **Stack Detection**: Works best with standard project structures
+- **Optional Context7 MCP**: Enhances documentation access
+
+---
+
 ## Official Resources
 
 ### Documentation

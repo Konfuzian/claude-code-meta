@@ -40,12 +40,16 @@ claude-code-safety-net acts as a protective layer against destructive commands e
 ### How It Works
 
 ```
-1. Receives JSON input containing tool_name and tool_input
-2. For Bash commands, splits on shell operators (;, &&, |)
-3. Tokenizes segments and strips wrappers (sudo, env, etc.)
-4. Dispatches to specialized analyzers (git, rm, find, interpreters)
-5. Checks custom rules if configured
-6. Outputs permissionDecision: "deny" to block unsafe operations
+1. Receives JSON via PreToolUse hook: { tool_name, tool_input }
+2. Splits Bash commands on shell operators (; && |)
+3. Recursively strips wrappers (sudo, env, sh -c) up to 5 levels
+4. Dispatches to specialized analyzers:
+   - git_analyzer: git operations
+   - rm_analyzer: file deletion
+   - find_analyzer: find -delete chains
+   - interpreter_analyzer: python/node one-liners
+5. Checks custom rules from config
+6. Returns { permissionDecision: "allow" | "deny", reason }
 ```
 
 ### Operating Modes
@@ -60,7 +64,13 @@ claude-code-safety-net acts as a protective layer against destructive commands e
 
 ### Installation
 
-**Claude Code:**
+**Claude Code (via npm):**
+```bash
+npm install -g cc-safety-net
+npx cc-safety-net doctor  # Verify installation
+```
+
+**Claude Code (via marketplace):**
 ```bash
 /plugin marketplace add kenryu42/cc-marketplace
 /plugin install safety-net@cc-marketplace
