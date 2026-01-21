@@ -89,7 +89,7 @@ const config: Config = {
           items: [
             {
               label: 'Getting Started',
-              to: '/docs/',
+              to: '/docs/intro',
             },
             {
               label: 'Features',
