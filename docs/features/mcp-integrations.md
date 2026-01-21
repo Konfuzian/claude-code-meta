@@ -18,6 +18,75 @@ MCP is an open standard by Anthropic that allows Claude to interact with externa
 
 Claude Code acts as both an MCP **client** (connecting to servers) and **server** (exposable to other tools).
 
+## Getting Started with MCP
+
+To use MCP with Claude Code, you need to:
+
+1. **Choose an MCP server** — Pick a server that provides the tools you need (filesystem, GitHub, database, etc.)
+2. **Create a configuration file** — Add the server to your `.claude/mcp.json` (project-level) or `~/.claude/mcp.json` (user-level)
+3. **Restart Claude Code** — MCP servers are loaded when Claude Code starts
+4. **Start using the tools** — The new tools are automatically available in your conversations
+
+### Tutorial: Setting Up the Filesystem MCP Server
+
+Let's walk through setting up the filesystem MCP server, which gives Claude access to read and write files in specified directories.
+
+**Step 1: Create the configuration file**
+
+Create a `.claude` folder in your project root (if it doesn't exist), then create `mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-filesystem",
+        "/path/to/allowed/directory"
+      ]
+    }
+  }
+}
+```
+
+Replace `/path/to/allowed/directory` with the actual path you want Claude to access (e.g., `/Users/me/documents` or `C:\\Users\\me\\documents` on Windows).
+
+**Step 2: Restart Claude Code**
+
+Close and reopen Claude Code, or start a new session. You should see the filesystem tools become available.
+
+**Step 3: Verify the connection**
+
+Check that the MCP server is running:
+
+```
+/mcp status
+```
+
+**Step 4: Use the filesystem tools**
+
+Now you can ask Claude to interact with the filesystem:
+
+```
+You: List all files in the documents folder
+
+Claude: I'll use the filesystem MCP server to list the directory.
+[Uses mcp__filesystem__list_directory tool]
+Found 12 files: report.pdf, notes.txt, ...
+```
+
+```
+You: Read the contents of notes.txt
+
+Claude: [Uses mcp__filesystem__read_file tool]
+Here's what's in notes.txt: ...
+```
+
+:::tip
+You can specify multiple directories by adding more paths to the `args` array. The server will only have access to the directories you explicitly list.
+:::
+
 ## Configuration
 
 ### Project-level (`.claude/mcp.json`)
