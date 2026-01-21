@@ -8,213 +8,227 @@ Methodologies and skill collections for effective AI-assisted development.
 
 ## superpowers
 
-**An agentic skills framework & software development methodology that works.**
+**An agentic skills framework & software development methodology.**
 
-[GitHub](https://github.com/obra/superpowers)
+[GitHub](https://github.com/obra/superpowers) | 32k+ stars | Disciplined development
 
 ### Overview
 
-superpowers provides a structured approach to AI-assisted development with pre-built skills that handle common development tasks. It emphasizes clear workflows and reproducible results.
+superpowers provides a structured approach to AI-assisted development that makes Claude Code more reliable, disciplined, and autonomous. Created by Jesse Vincent (obra), it enables Claude to work "autonomously for a couple hours at a time without deviating from the plan."
 
-### Philosophy
+The core insight: AI agents can learn reusable capabilities by reading markdown "SKILL.md" files that document specific workflows. These become **mandatory** patterns rather than optional suggestions.
 
-- **Skills as building blocks** — Reusable, composable actions
-- **Clear success criteria** — Know when tasks are done
-- **Verification built-in** — Every skill includes validation
-- **Human in the loop** — AI assists, human decides
+### Key Features
 
-### Key Skills
+| Feature | Description |
+|---------|-------------|
+| **14 Built-in Skills** | Brainstorming, planning, TDD, debugging, code review, and more |
+| **Mandatory TDD** | Iron Law: "NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST" |
+| **Subagent-Driven Development** | Fresh subagents per task with two-stage review |
+| **Parallel Agent Dispatch** | Coordinate multiple agents simultaneously |
+| **Git Worktrees** | Isolated development branches for parallel work |
 
-| Skill | Purpose |
-|-------|---------|
-| `implement` | Write new features with tests |
-| `refactor` | Improve code structure |
-| `debug` | Diagnose and fix issues |
-| `review` | Code review with suggestions |
-| `document` | Generate documentation |
-| `test` | Write comprehensive tests |
+### Core Workflow Commands
 
-### Usage
+| Command | Purpose |
+|---------|---------|
+| `/superpowers:brainstorm` | Interactive design refinement through Socratic questioning |
+| `/superpowers:write-plan` | Create detailed implementation plans |
+| `/superpowers:execute-plan` | Execute plans in batches with oversight |
+
+### The Seven-Phase Workflow
+
+1. **Design Refinement** — Agent asks clarifying questions before coding
+2. **Environment Setup** — Isolated branches, dependency verification
+3. **Planning** — Break work into 2-5 minute tasks with exact file paths
+4. **Implementation** — Subagent-driven or batch execution
+5. **TDD** — Mandatory RED-GREEN-REFACTOR cycles
+6. **Code Review** — Work evaluated against original plan
+7. **Finalization** — Verify tests, present merge options, cleanup
+
+### TDD Enforcement
+
+The framework enforces strict TDD with the RED-GREEN-REFACTOR cycle:
 
 ```
-You: /superpowers implement
-
-Skill: What feature do you want to implement?
-
-You: User authentication with JWT
-
-Skill: I'll implement JWT auth following these steps:
-1. Design the auth flow
-2. Write tests for expected behavior
-3. Implement the feature
-4. Verify all tests pass
-5. Document the API
-
-[Executes structured workflow]
+1. RED: Write one failing test (must watch it fail)
+2. GREEN: Write minimal code to pass
+3. REFACTOR: Clean up while keeping tests green
 ```
 
-### Why It Works
+### Installation
 
-- Consistent approach to common tasks
-- Built-in verification prevents incomplete work
-- Clear communication about what's happening
-- Easy to customize for your project
+```bash
+# Register the marketplace
+/plugin marketplace add obra/superpowers-marketplace
+
+# Install the plugin
+# (Follow marketplace prompts)
+```
+
+### When to Use
+
+- Production-quality software requiring discipline
+- Projects with existing test infrastructure
+- Teams wanting consistent development standards
+- Extended autonomous operation needs
+
+### Considerations
+
+- **Strict methodology** — Skills are MANDATORY, not optional
+- **Learning curve** — Requires adjustment to structured workflow
+- **Test infrastructure required** — TDD enforcement needs testable architecture
+- **Time investment upfront** — Brainstorm-plan-execute takes more initial time
 
 ---
 
 ## get-shit-done
 
-**A lightweight and powerful meta-prompting, context engineering and spec-driven development system by TÂCHES.**
+**A lightweight meta-prompting, context engineering and spec-driven development system.**
 
-[GitHub](https://github.com/glittercowboy/get-shit-done)
-
-### Overview
-
-get-shit-done focuses on writing clear specifications before implementation. It uses meta-prompting to help you think through requirements before Claude starts coding.
-
-### Core Concepts
-
-#### Spec-Driven Development
-
-Write specs first, code second:
-
-```markdown
-# Feature: User Registration
-
-## Inputs
-- email: string, required, valid email format
-- password: string, required, min 8 chars
-- name: string, optional
-
-## Outputs
-- Success: { user: User, token: string }
-- Error: { code: string, message: string }
-
-## Behavior
-1. Validate inputs
-2. Check email not already registered
-3. Hash password
-4. Create user record
-5. Generate JWT token
-6. Return user and token
-
-## Edge Cases
-- Duplicate email → error "EMAIL_EXISTS"
-- Invalid email format → error "INVALID_EMAIL"
-- Weak password → error "WEAK_PASSWORD"
-```
-
-#### Meta-Prompting
-
-The system helps you write better prompts:
-
-```
-You: /gsd start
-
-GSD: What are you trying to build?
-
-You: A payment system
-
-GSD: Let's define it clearly:
-- What payment providers?
-- What payment types?
-- What's the happy path?
-- What errors need handling?
-- What's the data model?
-
-[Guides you through spec creation]
-```
-
-### Benefits
-
-- Forces clear thinking before coding
-- Reduces back-and-forth iterations
-- Creates documentation as a byproduct
-- Works with any AI assistant
-
----
-
-## how-to-ralph-wiggum
-
-**The Ralph Wiggum Technique — the AI development methodology that reduces software costs to less than a fast food worker's wage.**
-
-[GitHub](https://github.com/ghuntley/how-to-ralph-wiggum)
+[GitHub](https://github.com/glittercowboy/get-shit-done) | 5.7k stars | Solo developers
 
 ### Overview
 
-The Ralph Wiggum technique is a provocative methodology that maximizes AI agent autonomy while maintaining quality. Named after the Simpsons character, it embraces a "let it run" approach with smart guardrails.
+get-shit-done (GSD) solves **context rot** — the quality degradation that occurs as Claude fills its context window during development sessions. It uses strategic file management to keep main context at 30-40% utilization while spawning parallel subagents with fresh 200k-token contexts.
 
-### The Technique
+**Target User:** Solo developers who rely on Claude Code to write their code.
 
-1. **Clear goal definition** — Specific, measurable outcomes
-2. **Autonomous execution** — Let the agent work without interruption
-3. **Smart exit detection** — Know when the task is actually done
-4. **Verification loops** — Tests prove correctness
-5. **Iterate if needed** — Fix and re-run until complete
+**Adoption:** Trusted by engineers at Amazon, Google, Shopify, and Webflow.
 
-### Key Principles
+### Key Features
 
-#### Embrace Autonomy
+| Feature | Description |
+|---------|-------------|
+| **Context Engineering** | Strategic file management at 30-40% context utilization |
+| **XML Prompt Formatting** | Precise task structure for unambiguous execution |
+| **Multi-Agent Orchestration** | Parallel subagents for research, planning, execution |
+| **Atomic Git Commits** | One commit per task for clean history |
+| **Session Persistence** | STATE.md maintains context across sessions |
+| **Codebase Learning** | Hooks index exports/imports and detect naming conventions |
 
-Don't micromanage. Give Claude:
-- Clear objectives
-- Success criteria (tests)
-- Permission to iterate
+### Workflow Modes
 
-#### Cost Efficiency
+- **Full Planning Mode** (`/gsd:new-project`) — Complete spec-driven development
+- **Quick Mode** (`/gsd:quick`) — Fast ad-hoc tasks with same guarantees
+- **Debug Mode** (`/gsd:debug`) — Systematic debugging with persistent state
 
-The methodology claims dramatic cost reduction by:
-- Reducing human oversight time
-- Letting agents self-correct
-- Batching work into complete features
-
-#### Quality Through Tests
-
-Tests are the arbiters of quality:
+### The Six-Step Cycle
 
 ```
-Task: Implement feature X
-Done when: All tests pass
-Not done when: Any test fails
-
-Claude continues until tests pass.
+1. INITIALIZE → 2. DISCUSS → 3. PLAN → 4. EXECUTE → 5. VERIFY → 6. COMPLETE
 ```
+
+**Step 1: Initialize** (`/gsd:new-project`)
+- Asks clarifying questions until complete understanding
+- Spawns parallel agents for domain research
+- Creates: PROJECT.md, REQUIREMENTS.md, ROADMAP.md, STATE.md
+
+**Step 2: Discuss** (`/gsd:discuss-phase N`)
+- Captures implementation preferences before planning
+- Identifies gray areas (layout choices, API formats, architecture)
+
+**Step 3: Plan** (`/gsd:plan-phase N`)
+- Research implementation approach
+- Creates 2-3 atomic task plans with XML structure
+- Verification loop until plans pass requirements check
+
+**Step 4: Execute** (`/gsd:execute-phase N`)
+- Plans run in parallel waves with fresh 200k-token contexts
+- Each task gets atomic commit immediately upon completion
+
+**Step 5: Verify** (`/gsd:verify-work N`)
+- Extracts testable deliverables
+- Manual verification walkthrough
+- Failures trigger automatic debugging
+
+**Step 6: Complete** (`/gsd:complete-milestone`)
+- Archives and tags release
+- `/gsd:new-milestone` starts next version
+
+### XML Task Structure
+
+```xml
+<task type="auto">
+  <name>Create login endpoint</name>
+  <files>src/app/api/auth/login/route.ts</files>
+  <action>
+    Use jose for JWT (not jsonwebtoken).
+    Validate credentials against users table.
+    Return httpOnly cookie on success.
+  </action>
+  <verify>curl -X POST localhost:3000/api/auth/login returns 200</verify>
+  <done>Valid credentials return cookie, invalid return 401</done>
+</task>
+```
+
+### Installation
+
+```bash
+npx get-shit-done-cc
+
+# Options
+npx get-shit-done-cc --global  # Install to ~/.claude/
+npx get-shit-done-cc --local   # Install to ./.claude/
+```
+
+### Configuration
+
+Settings in `.planning/config.json`:
+- **mode**: `yolo` (auto-approve) or `interactive` (confirm each step)
+- **depth**: `quick`, `standard`, or `comprehensive`
+- **Model Profiles**: quality (Opus), balanced (Sonnet/Opus mix), budget
 
 ### When to Use
 
-- Well-defined features with clear test cases
-- Refactoring with existing test coverage
-- Bug fixes with reproducible test cases
-- Greenfield features where you can define tests upfront
+- Solo development with Claude Code
+- Projects needing clear specifications
+- Long sessions where context rot is a concern
+- Rapid iteration with quality guarantees
 
-### When to Be Careful
+### Considerations
 
-- Critical systems without test coverage
-- Ambiguous requirements
-- Complex integrations requiring human judgment
-- Security-sensitive code
+- **Optimized for solo developers** — Not designed for team collaboration
+- **Claude Code specific** — Built specifically for Claude Code
+- **Requires permission bypasses** — Best with `--dangerously-skip-permissions`
+- **Learning curve** — Multiple slash commands to learn
 
 ---
 
 ## Comparison
 
-| Framework | Focus | Best For |
-|-----------|-------|----------|
-| **superpowers** | Structured skills | Repeatable workflows |
-| **get-shit-done** | Specifications | Clear requirements |
-| **ralph-wiggum** | Autonomy | Defined, testable tasks |
+| Aspect | superpowers | get-shit-done |
+|--------|-------------|---------------|
+| **Philosophy** | Disciplined, structured | Context engineering + specs |
+| **Core Problem** | Agent reliability & drift | Context rot (quality degradation) |
+| **Workflow Phases** | 7 phases | 6 steps |
+| **TDD Approach** | Mandatory RED-GREEN-REFACTOR | Optional |
+| **Planning Style** | 2-5 minute tasks | XML-structured atomic tasks |
+| **Agent Usage** | Subagent with dual-stage review | Parallel subagents, fresh contexts |
+| **Human Oversight** | Batch checkpoints | Interactive or YOLO mode |
+| **Strictness** | "Skills are MANDATORY" | Flexible with quick mode |
+| **Best For** | Production software, teams | Solo developers, rapid iteration |
+
+## When to Use Each
+
+### Use superpowers when:
+- Building production-quality software
+- You want enforced TDD discipline
+- Extended autonomous operation is needed
+- Team consistency is important
+
+### Use get-shit-done when:
+- You're a solo developer
+- Context rot is affecting quality
+- You want spec-driven development
+- Rapid iteration is the priority
 
 ## Combining Approaches
 
-These frameworks complement each other:
-
-1. Use **get-shit-done** to write clear specs
-2. Use **superpowers** skills to structure the implementation
-3. Use **ralph-wiggum** autonomy for execution
+These frameworks can complement each other:
 
 ```
-# Workflow
-1. /gsd spec          → Create clear specification
-2. /superpowers plan  → Design implementation approach
-3. /ralph run         → Execute autonomously until tests pass
+1. /gsd:new-project     → Create clear specification
+2. /superpowers:plan    → Design implementation with TDD
+3. /gsd:execute-phase   → Execute with fresh context agents
 ```
