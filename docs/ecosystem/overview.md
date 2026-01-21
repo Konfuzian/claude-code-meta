@@ -46,48 +46,59 @@ Curated lists and community resources.
 | [safety-net](https://github.com/kenryu42/claude-code-safety-net) | Safety | Command protection | Preventing destructive operations |
 | [everything-claude-code](https://github.com/affaan-m/everything-claude-code) | Configs | Ready-to-use setups | Quick setup with battle-tested configs |
 
+## What Each Tool Includes
+
+| Tool | Agents | Skills | Commands | Hooks | MCP Servers |
+|------|:------:|:------:|:--------:|:-----:|:-----------:|
+| **claude-flow** | 54+ | — | — | 12 workers | native |
+| **ralph-claude-code** | — | — | 4 | 2 | — |
+| **superpowers** | subagents | 14 | 3 | — | — |
+| **get-shit-done** | parallel | — | 6+ | indexing | — |
+| **safety-net** | — | — | 1 | 1 | — |
+| **everything-claude-code** | 9 | 7+ | 10 | 10+ | 15 |
+
 ## What Each Tool Does
 
 ### Orchestration Tools
 
 **[claude-flow](https://github.com/ruvnet/claude-flow)** — Run many Claude agents working together
-- Coordinates 54+ specialized agents (coder, tester, reviewer, etc.)
-- Routes tasks to the right agent automatically
-- Persists memory across sessions via vector database
+- 54+ specialized agents (coder, tester, reviewer, architect, security-auditor, etc.)
+- 12 background workers auto-dispatch on file changes and events
+- 5 consensus algorithms for agent coordination
 - Best for: Large projects needing parallel work streams
 
 **[ralph-claude-code](https://github.com/frankbria/ralph-claude-code)** — Let Claude work autonomously
-- Runs Claude in a loop until the task is done
-- Detects when Claude is stuck or finished
-- Saves progress to git automatically
+- 4 commands: `ralph`, `ralph-import`, `ralph-status`, `--continue`
+- Dual-condition exit gate (heuristic + explicit signal)
+- Circuit breaker after 3 loops with no progress
 - Best for: "Set it and forget it" overnight development
 
 ### Development Methodologies
 
 **[superpowers](https://github.com/obra/superpowers)** — Strict discipline for quality code
-- Requires tests before implementation (TDD)
-- Enforces small, focused changes
-- Uses subagents for research without polluting context
+- 14 built-in skills (brainstorm, plan, TDD, debug, review, etc.)
+- 3 core commands: `/superpowers:brainstorm`, `:write-plan`, `:execute-plan`
+- 7-phase workflow with mandatory TDD
 - Best for: Production software where quality matters
 
 **[get-shit-done](https://github.com/glittercowboy/get-shit-done)** — Spec-first rapid development
-- Write specs first, then implement
-- Tracks state in STATE.md for context recovery
-- Targets 30-40% context usage to stay efficient
+- 6+ commands: `/gsd:new-project`, `:discuss-phase`, `:plan-phase`, `:execute-phase`, `:verify-work`, `:quick`
+- Parallel subagents with fresh 200k-token contexts
+- 6-step cycle: Initialize → Discuss → Plan → Execute → Verify → Complete
 - Best for: Solo devs wanting structure without overhead
 
 ### Safety & Configuration
 
 **[safety-net](https://github.com/kenryu42/claude-code-safety-net)** — Prevent dangerous commands
-- Blocks destructive git operations (force push, hard reset)
-- Semantic analysis—understands intent, not just command strings
-- Customizable rules for your workflow
+- 4 operating modes: default, strict, paranoid, paranoid-rm
+- Blocks 10+ categories of destructive operations
+- 5-level recursive wrapper detection
 - Best for: Everyone (recommended as a baseline)
 
 **[everything-claude-code](https://github.com/affaan-m/everything-claude-code)** — Ready-to-use configs
-- 9 pre-configured agents for common tasks
-- 15 MCP server integrations
-- Battle-tested hooks and workflows
+- 9 agents: planner, architect, tdd-guide, code-reviewer, security-reviewer, etc.
+- 10 commands: `/tdd`, `/plan`, `/e2e`, `/code-review`, `/build-fix`, etc.
+- 15 MCP servers: GitHub, Supabase, Vercel, Railway, Cloudflare, etc.
 - Best for: Quick setup without configuration from scratch
 
 ## Complementary Combinations
