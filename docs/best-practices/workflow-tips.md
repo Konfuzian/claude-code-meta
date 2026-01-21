@@ -130,6 +130,56 @@ Try:
 Let's refactor auth to JWT. First, show me the current auth implementation and propose a migration plan.
 ```
 
+## Commit and Push Regularly
+
+### Why It Matters
+
+Regular commits create recovery points and preserve your progress:
+- **Recovery**: Roll back if Claude goes in the wrong direction
+- **Visibility**: Track what was changed and when
+- **Safety**: Work is backed up to remote immediately
+- **Collaboration**: Others can see progress in real-time
+
+### Commit at Natural Breakpoints
+
+Ask Claude to commit after completing logical units of work:
+
+```
+Commit the changes we just made
+```
+
+Good times to commit:
+- After completing a feature or fix
+- Before starting a risky refactoring
+- After tests pass
+- Before trying an experimental approach
+
+### Push Immediately
+
+Don't accumulate local commits. Push after each commit:
+
+```
+Commit and push the auth changes
+```
+
+This ensures:
+- Work is backed up remotely
+- CI/CD pipelines can validate changes
+- Team members see progress
+- No risk of losing local work
+
+### Atomic Commits
+
+Prefer small, focused commits over large batches:
+
+```
+✅ "Add login endpoint validation"
+✅ "Fix session timeout handling"
+✅ "Add tests for auth middleware"
+
+❌ "Various auth changes and fixes"
+```
+
 ## Session Hygiene
 
 ### Start Fresh for New Tasks
