@@ -6,6 +6,19 @@ sidebar_position: 2
 
 Tools for coordinating multiple Claude agents and creating autonomous development workflows.
 
+## What Are Agent Orchestrators?
+
+Agent orchestrators are tools that manage and coordinate AI agents working on software development tasks. Instead of using Claude Code for one task at a time, these tools enable:
+
+- **Multi-agent coordination**: Multiple specialized agents working together on different aspects of a task
+- **Autonomous loops**: Claude continues working through tasks without manual intervention
+- **Persistent memory**: Learning from past sessions to improve future performance
+- **Safety mechanisms**: Rate limiting, circuit breakers, and exit detection to prevent runaway costs
+
+This page covers three approaches: enterprise-grade multi-agent swarms (claude-flow), autonomous development loops (ralph-claude-code), and the methodology documentation behind the Ralph technique (The Ralph Playbook).
+
+---
+
 ## claude-flow
 
 **Enterprise-grade multi-agent AI orchestration platform (v3).**
@@ -23,6 +36,8 @@ Claude-Flow v3 is a comprehensive AI agent orchestration framework that transfor
 
 ### Key Features
 
+The feature table below explains the core capabilities that make claude-flow unique. Each feature addresses a specific challenge in multi-agent coordination:
+
 | Feature | Description |
 |---------|-------------|
 | **54+ Specialized Agents** | Coder, tester, reviewer, architect, security-auditor, optimizer, documenter, and more |
@@ -37,6 +52,8 @@ Claude-Flow v3 is a comprehensive AI agent orchestration framework that transfor
 
 ### Architecture
 
+The architecture diagram shows how requests flow through the system. Understanding this flow helps you debug issues and optimize performance:
+
 ```
 User → Claude-Flow (CLI/MCP) → Router → Swarm → Agents → Memory → LLM Providers
                        ↑                          ↓
@@ -44,6 +61,8 @@ User → Claude-Flow (CLI/MCP) → Router → Swarm → Agents → Memory → LL
 ```
 
 ### Queen Types & Workers
+
+Claude-flow uses a hierarchical model inspired by insect colonies. "Queens" are coordinator agents that manage "workers" (specialized task agents). This division of labor allows complex tasks to be broken down and executed efficiently:
 
 | Queen Type | Role |
 |-----------|------|
@@ -64,27 +83,35 @@ User → Claude-Flow (CLI/MCP) → Router → Swarm → Agents → Memory → LL
 
 ### Coordination Mechanisms
 
+When multiple agents work on the same codebase, they need to agree on changes and avoid conflicts. These coordination mechanisms ensure agents work together coherently:
+
 - **Consensus**: Majority, Weighted (Queen 3x), Byzantine (f &lt; n/3), Raft, Gossip, CRDT
 - **Anti-Drift**: Single coordinator enforces alignment, max 8 agents recommended
 - **Collective Memory**: Shared knowledge base with LRU cache and SQLite persistence
 
 ### Quick Start
 
+Getting started with claude-flow involves installing it, initializing your project, and connecting it to Claude Code via MCP (Model Context Protocol). Here's what each command does:
+
 ```bash
-# Install (requires Node.js 18+ or Bun 1.0+)
+# Install the package globally (requires Node.js 18+ or Bun 1.0+)
 npm install claude-flow@v3alpha
 
-# Initialize
+# Initialize claude-flow in your project directory
+# This creates configuration files and sets up the agent definitions
 npx claude-flow@v3alpha init
 
-# Add as MCP server
+# Register claude-flow as an MCP server with Claude Code
+# This allows Claude Code to communicate with the swarm
 claude mcp add claude-flow -- npx -y claude-flow@v3alpha
 
-# Start MCP server
+# Start the MCP server to enable swarm operations
 npx claude-flow@v3alpha mcp start
 ```
 
 ### Typical Workflow
+
+This workflow shows the typical progression from setup to execution. Each phase builds on the previous one, and the learning loop means the system improves over time:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -121,6 +148,8 @@ npx claude-flow@v3alpha mcp start
 └─────────────────────────────────────────────────────────────────┘
 ```
 
+**Example prompts** — These show how to request tasks from claude-flow through Claude Code. The natural language is interpreted by the Queen, which then dispatches appropriate workers:
+
 **Single-task example:**
 ```bash
 # In Claude Code with MCP:
@@ -137,7 +166,7 @@ npx claude-flow@v3alpha mcp start
 
 ### Cost Optimization
 
-Smart routing can extend Claude Code subscription by ~250%:
+Claude-flow uses a tiered routing system to minimize API costs. Simple tasks are handled locally or with cheaper models, reserving expensive Opus calls for complex work. This smart routing can extend Claude Code subscription by ~250%:
 
 | Task Complexity | Handler | Speed | Cost |
 |-----------------|---------|-------|------|
@@ -147,6 +176,8 @@ Smart routing can extend Claude Code subscription by ~250%:
 
 ### When to Use
 
+Claude-flow is best suited for scenarios where parallelization and specialization provide clear benefits:
+
 - Large codebase refactoring with parallel workers
 - Research tasks requiring multiple investigation threads
 - Building and testing across multiple components
@@ -155,6 +186,8 @@ Smart routing can extend Claude Code subscription by ~250%:
 - Multi-provider environments needing automatic failover
 
 ### Considerations
+
+Before adopting claude-flow, be aware of these tradeoffs:
 
 - Highest complexity among ecosystem tools (8,600+ files)
 - Requires Claude Code as foundational layer
@@ -172,6 +205,8 @@ Smart routing can extend Claude Code subscription by ~250%:
 
 ### Overview
 
+While claude-flow coordinates multiple agents, ralph-claude-code takes a different approach: a single agent running in a continuous loop until the task is complete.
+
 ralph-claude-code implements the "Ralph Wiggum" technique — an autonomous development loop where Claude continues working until the task is complete. Named after Geoffrey Huntley's technique (itself named after the Simpsons character), it enables "walk away" development.
 
 **The Core Loop:**
@@ -186,6 +221,8 @@ while :; do cat PROMPT.md | claude ; done
 
 ### Key Features
 
+The features below focus on safety and reliability — essential for any system that runs autonomously. Each feature prevents a specific failure mode:
+
 | Feature | Description |
 |---------|-------------|
 | **Dual-Condition Exit Gate** | Requires BOTH heuristic completion indicators (≥2) AND explicit `EXIT_SIGNAL: true` |
@@ -199,6 +236,8 @@ while :; do cat PROMPT.md | claude ; done
 
 ### The Loop Pattern
 
+At its core, ralph-claude-code is a sophisticated wrapper around a simple concept: repeatedly calling Claude until the task is done. The pseudocode below shows the control flow that makes this safe:
+
 ```
 while true:
   increment loop_count
@@ -211,7 +250,7 @@ while true:
 
 ### Exit Detection
 
-The system uses multi-condition exit strategy:
+A key challenge in autonomous loops is knowing when to stop. Too early and the task is incomplete; too late and you waste resources. ralph-claude-code uses a multi-condition exit strategy that requires multiple signals before terminating:
 
 1. **Test Saturation**: 3+ consecutive test-focused loops
 2. **Completion Signals**: Multiple "done" indicators (2+ detected)
@@ -220,24 +259,28 @@ The system uses multi-condition exit strategy:
 
 ### Quick Start
 
+Installation involves cloning the repository and running the installer. Per-project setup uses `ralph-import` to convert your requirements document into the format ralph expects:
+
 ```bash
-# System installation
+# System installation — one-time setup
 git clone https://github.com/frankbria/ralph-claude-code.git
 cd ralph-claude-code
-./install.sh
+./install.sh  # Installs ralph commands globally
 
-# Per-project setup
-ralph-import requirements.md my-project  # Convert PRD to Ralph format
+# Per-project setup — run for each new project
+ralph-import requirements.md my-project  # Convert your PRD to Ralph format
 cd my-project
-ralph --monitor                          # Start with tmux dashboard
+ralph --monitor                          # Start the loop with tmux dashboard
 
-# Other commands
-ralph --continue                        # Resume 24-hour session
-ralph-reset                             # Clear state/logs
-ralph-validate                          # Check configuration
+# Utility commands
+ralph --continue                        # Resume a session within 24 hours
+ralph-reset                             # Clear all state and logs for fresh start
+ralph-validate                          # Verify your configuration is correct
 ```
 
 ### Typical Workflow
+
+The workflow progresses from preparation through autonomous execution. The key insight is that good requirements upfront lead to better autonomous results:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -285,7 +328,7 @@ ralph-validate                          # Check configuration
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Overnight development example:**
+**Overnight development example** — This demonstrates the "walk away" use case that makes ralph powerful. You start the loop, detach from the terminal, and return later to find completed work:
 ```bash
 # Friday evening
 ralph-import feature-spec.md new-dashboard
@@ -303,18 +346,22 @@ tmux attach -t ralph
 
 ### Project Structure
 
+When you run `ralph-import`, it creates a `.ralph/` folder with configuration files. Understanding this structure helps you customize and debug the loop:
+
 ```
 my-project/
-├── .ralph/                 # Configuration folder
-│   ├── PROMPT.md          # Development instructions
-│   ├── @fix_plan.md       # Prioritized tasks
-│   ├── @AGENT.md          # Build/run instructions
-│   ├── specs/             # Specifications
-│   └── logs/              # Execution logs
-└── src/                   # Source code
+├── .ralph/                 # Configuration folder created by ralph-import
+│   ├── PROMPT.md          # Main prompt fed to Claude each iteration
+│   ├── @fix_plan.md       # Prioritized task list (updated by Claude)
+│   ├── @AGENT.md          # Instructions for how to build/test the project
+│   ├── specs/             # Detailed specifications for features
+│   └── logs/              # Execution logs for debugging
+└── src/                   # Your source code (created by Claude)
 ```
 
 ### When to Use
+
+ralph-claude-code excels when you have well-defined tasks that benefit from iterative refinement:
 
 - Long-running implementation tasks
 - Multi-step refactoring with clear completion criteria
@@ -323,12 +370,16 @@ my-project/
 
 ### When NOT to Use
 
+Autonomous loops are not suitable for every task. Avoid ralph-claude-code when:
+
 - Tasks requiring human judgment or design decisions
 - One-shot operations that don't benefit from iteration
 - Tasks with unclear success criteria
 - Production debugging (use targeted debugging instead)
 
 ### Considerations
+
+Cost and time implications of autonomous loops:
 
 - **Cost**: A 50-iteration loop can cost $50-100+ depending on context size
 - **API Limits**: Claude's 5-hour limit triggers user prompts
@@ -338,6 +389,8 @@ my-project/
 ---
 
 ## Comparison
+
+This table helps you choose between the two main tools. They solve different problems and are suited for different use cases:
 
 | Aspect | claude-flow | ralph-claude-code |
 |--------|-------------|-------------------|
@@ -349,7 +402,7 @@ my-project/
 | **Complexity** | High (250k+ lines, WASM) | Medium (shell scripts + hooks) |
 | **Best For** | Large codebases, teams | Overnight automated development |
 
-## When to Use Each
+## Decision Guide: When to Use Each
 
 ### Use claude-flow when:
 - You need multiple agents working in parallel
@@ -373,9 +426,13 @@ my-project/
 
 ### Overview
 
+While ralph-claude-code is an implementation, The Ralph Playbook is the methodology documentation that explains *why* the technique works. Think of it as the theory behind the practice.
+
 The Ralph Playbook documents the original technique that inspired ralph-claude-code. It provides detailed methodology for autonomous Claude development with a focus on **context engineering** — keeping the agent in its "smart zone" through strategic file management.
 
 ### The Three Phases
+
+The playbook divides development into distinct phases, each with its own mode and prompt file. This separation prevents scope creep and keeps the agent focused:
 
 | Phase | Mode | Purpose |
 |-------|------|---------|
@@ -384,6 +441,8 @@ The Ralph Playbook documents the original technique that inspired ralph-claude-c
 | **3. Building** | `PROMPT_build.md` | Implement, test, commit, update plan |
 
 ### Typical Workflow
+
+This workflow shows the three phases in practice. Note how the planning phase creates the plan *without implementing*, ensuring a thoughtful approach before coding begins:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -438,19 +497,21 @@ The Ralph Playbook documents the original technique that inspired ralph-claude-c
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Mode switching:**
+**Mode switching** — You control which phase runs by passing arguments to the loop script:
 ```bash
-# Generate/update the plan
+# Generate/update the plan (runs PROMPT_plan.md)
 ./loop.sh plan
 
-# Review IMPLEMENTATION_PLAN.md, then build
+# Review IMPLEMENTATION_PLAN.md manually, then start building
 ./loop.sh
 
-# If plan goes wrong, regenerate it
+# If the plan goes in the wrong direction, regenerate it
 ./loop.sh plan
 ```
 
 ### Key Principles
+
+The playbook emphasizes **context engineering** — the art of managing what the agent knows and when. These principles are critical to successful autonomous development:
 
 **Context is Everything:**
 - 200K+ tokens advertised ≈ 176K truly usable
@@ -464,29 +525,35 @@ The Ralph Playbook documents the original technique that inspired ralph-claude-c
 
 ### File Structure
 
+The playbook uses a specific file structure. Each file has a purpose in guiding the agent:
+
 ```
 project/
-├── loop.sh                    # Outer loop script
-├── PROMPT_plan.md             # Planning mode instructions
-├── PROMPT_build.md            # Building mode instructions
-├── AGENTS.md                  # Operational guide (how to build/test)
-├── IMPLEMENTATION_PLAN.md     # Prioritized tasks (Ralph-generated)
-├── specs/                     # One spec per JTBD topic
-│   └── [topic].md
-└── src/                       # Source code
+├── loop.sh                    # The shell script that runs the infinite loop
+├── PROMPT_plan.md             # Instructions for planning phase (what to analyze)
+├── PROMPT_build.md            # Instructions for building phase (how to implement)
+├── AGENTS.md                  # Project-specific instructions (build commands, test commands)
+├── IMPLEMENTATION_PLAN.md     # The task list (generated by planning phase)
+├── specs/                     # One specification file per feature/concern
+│   └── [topic].md             # e.g., authentication.md, database.md
+└── src/                       # Your source code
 ```
 
 ### The Loop
 
+The actual loop script is simple — it's the prompt engineering that does the heavy lifting:
+
 ```bash
 #!/bin/bash
 while true; do
+    # Pipe the prompt file to Claude in non-interactive mode
     cat "$PROMPT_FILE" | claude -p \
-        --dangerously-skip-permissions \
-        --output-format=stream-json \
-        --model opus \
-        --verbose
+        --dangerously-skip-permissions \  # Allow all tool calls without asking
+        --output-format=stream-json \     # Structured output for parsing
+        --model opus \                    # Use the most capable model
+        --verbose                         # Show detailed progress
 
+    # Push changes after each iteration (creates checkpoint)
     git push origin "$CURRENT_BRANCH"
     echo "======================== LOOP COMPLETE ========================"
 done
@@ -494,7 +561,7 @@ done
 
 ### Prompt Patterns
 
-The playbook identifies key language patterns that improve reliability:
+The playbook identifies specific words and phrases that change how Claude behaves. Using the right language in your prompts significantly improves reliability:
 
 | Pattern | Purpose |
 |---------|---------|
@@ -507,12 +574,16 @@ The playbook identifies key language patterns that improve reliability:
 
 ### When to Use
 
-- Learning the Ralph technique from the source
-- Understanding context engineering principles
-- Customizing ralph-claude-code for your workflow
-- Building your own autonomous loop implementation
+Read the Ralph Playbook when you want to:
+
+- Learn the Ralph technique from the original source
+- Understand context engineering principles deeply
+- Customize ralph-claude-code for your specific workflow
+- Build your own autonomous loop implementation from scratch
 
 ### Relation to ralph-claude-code
+
+Understanding the relationship between the playbook (theory) and ralph-claude-code (implementation):
 
 | Aspect | Ralph Playbook | ralph-claude-code |
 |--------|----------------|-------------------|
