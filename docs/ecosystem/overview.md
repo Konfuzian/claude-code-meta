@@ -6,6 +6,40 @@ sidebar_position: 1
 
 The Claude Code ecosystem includes tools, frameworks, and resources built by the community to extend and enhance Claude Code's capabilities.
 
+## Claude Code (Vanilla)
+
+Before exploring the ecosystem, it's worth noting that **vanilla Claude Code** is remarkably capable on its own. Many developers use it without any extensions and achieve excellent results.
+
+### What You Get Out of the Box
+
+- **Agentic coding** — Claude reads, writes, and refactors code across your entire codebase
+- **Terminal access** — Run commands, tests, builds, and git operations
+- **Multi-file editing** — Coordinated changes across many files in a single session
+- **Context awareness** — Understands project structure, dependencies, and conventions
+- **Built-in tools** — File search, grep, web fetch, and more
+- **Slash commands** — `/init`, `/compact`, `/cost`, `/clear`, and others
+- **Custom instructions** — CLAUDE.md files for project-specific guidance
+- **MCP integration** — Connect to external tools and services
+- **Hooks** — Run custom scripts on Claude Code events
+
+### When Vanilla Is Enough
+
+For most tasks, vanilla Claude Code handles everything you need:
+- Bug fixes and feature development
+- Code refactoring and modernization
+- Writing tests and documentation
+- Debugging and troubleshooting
+- Learning new codebases
+
+### When to Consider Ecosystem Tools
+
+The ecosystem tools below add value when you need:
+- **Multiple agents** working in parallel on large codebases
+- **Autonomous operation** without human supervision
+- **Enforced methodologies** like mandatory TDD
+- **Additional safety rails** beyond Claude's built-in protections
+- **Pre-built configurations** to skip setup time
+
 ## Categories
 
 ### [Agent Orchestrators](./agent-orchestrators)
