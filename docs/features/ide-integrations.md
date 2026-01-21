@@ -6,6 +6,14 @@ sidebar_position: 3
 
 Use Claude Code within your favorite development environment.
 
+## What This Page Covers
+
+This page explains how to use Claude Code inside your IDE rather than (or in addition to) the terminal. You'll learn about extensions for VS Code, JetBrains, and browser-based development.
+
+**Why use IDE integration?** The terminal CLI is powerful, but IDE integration adds visual diff review, click-to-accept changes, and context from your current selection. Many developers use both.
+
+---
+
 ## VS Code Extension
 
 The most mature IDE integration with 2M+ installs.
@@ -24,6 +32,8 @@ code --install-extension anthropic.claude-code
 
 ### Features
 
+The VS Code extension provides a graphical interface for Claude Code with IDE-specific enhancements:
+
 | Feature | Description |
 |---------|-------------|
 | **Inline Diffs** | See proposed changes in the editor |
@@ -35,6 +45,8 @@ code --install-extension anthropic.claude-code
 
 ### Keyboard Shortcuts
 
+These shortcuts let you work with Claude Code without leaving your keyboard:
+
 | Shortcut | Action |
 |----------|--------|
 | `Cmd+Shift+P` → "Claude" | Open command palette |
@@ -43,11 +55,14 @@ code --install-extension anthropic.claude-code
 
 ### Diff Handling
 
-When Claude proposes changes:
+When Claude proposes file changes, VS Code shows them as visual diffs. This lets you review exactly what will change before accepting:
+
 - **Green** = additions
 - **Red** = deletions
 - Click **Accept** or **Reject** per file
 - Use **Accept All** for batch approval
+
+---
 
 ## JetBrains Plugin (Beta)
 
@@ -61,6 +76,8 @@ Works with IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
 
 ### Features
 
+The JetBrains plugin integrates with native IDE features like the built-in diff viewer and diagnostics panel:
+
 | Feature | Description |
 |---------|-------------|
 | **Quick Launch** | `Cmd+Esc` / `Ctrl+Esc` |
@@ -70,6 +87,8 @@ Works with IntelliJ IDEA, PyCharm, WebStorm, and other JetBrains IDEs.
 | **File Reference** | `Cmd+Option+K` / `Alt+Ctrl+K` |
 
 ### MCP Integration
+
+JetBrains 2025.2+ includes a native MCP server that exposes IDE features (refactoring, navigation, diagnostics) to Claude:
 
 JetBrains 2025.2+ includes a native MCP server for IDE features:
 
@@ -84,9 +103,11 @@ JetBrains 2025.2+ includes a native MCP server for IDE features:
 }
 ```
 
+---
+
 ## Chrome Extension (Beta)
 
-Browser automation and debugging integration.
+The Chrome extension enables Claude to interact with web browsers — useful for testing web applications, debugging frontend issues, or automating browser workflows.
 
 ### Launch
 
@@ -95,6 +116,8 @@ claude --chrome
 ```
 
 ### Capabilities
+
+These capabilities let Claude see and interact with web pages like a human user would:
 
 - **Navigate** — Open URLs, click elements
 - **Inspect** — Read DOM, console logs
@@ -105,11 +128,15 @@ claude --chrome
 
 ### Limitations
 
+The Chrome extension has some restrictions to be aware of:
+
 - Chrome only (not Brave, Arc, Firefox)
 - Not available in WSL
 - Requires display access
 
 ### Example
+
+This example shows Claude testing a login flow by actually interacting with the browser:
 
 ```
 You: open the login page and test with invalid credentials
@@ -122,9 +149,11 @@ Claude: I'll launch Chrome and test the login flow.
 The login page shows: "Invalid credentials"
 ```
 
+---
+
 ## Terminal Integration
 
-Claude Code works in any terminal, but some offer enhanced experiences:
+Claude Code works in any terminal, but some terminals offer enhanced experiences with better rendering or shell integration:
 
 ### iTerm2 (macOS)
 
@@ -144,7 +173,11 @@ tmux new-session -s claude
 claude
 ```
 
+---
+
 ## Remote Development
+
+Claude Code works in remote environments, letting you develop on servers, containers, or cloud-based IDEs.
 
 ### SSH
 
@@ -154,7 +187,8 @@ ssh server "claude -p 'check disk usage'"
 
 ### VS Code Remote
 
-Claude Code extension works with:
+The Claude Code extension works seamlessly with VS Code's remote development features:
+
 - Remote SSH
 - Dev Containers
 - WSL

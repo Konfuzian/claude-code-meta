@@ -6,9 +6,11 @@ sidebar_position: 4
 
 Automate actions in response to Claude Code events.
 
+This page explains how to create hooks that run automatically when Claude Code performs actions. Hooks are one of the most powerful customization features — they let you integrate Claude Code into your existing workflow.
+
 ## What are Hooks?
 
-Hooks are shell commands that execute automatically when specific events occur. Use them to:
+Hooks are shell commands that execute automatically when specific events occur. They're the glue between Claude Code and your other tools. Use them to:
 
 - Run formatters after file writes
 - Validate changes before commits
@@ -17,6 +19,8 @@ Hooks are shell commands that execute automatically when specific events occur. 
 - Send notifications
 
 ## Hook Events
+
+Each event fires at a specific point in Claude Code's operation. Understanding when they fire helps you choose the right one:
 
 | Event | Timing | Common Use Cases |
 |-------|--------|------------------|
@@ -31,7 +35,7 @@ Hooks are shell commands that execute automatically when specific events occur. 
 
 ## Configuration
 
-Add hooks to your settings file:
+Hooks are defined in your settings file (`.claude/settings.json` or `~/.claude/settings.json`). Here's the basic structure:
 
 ```json
 {
@@ -54,7 +58,7 @@ Add hooks to your settings file:
 
 ## Matchers
 
-Filter which tool uses trigger the hook:
+Matchers determine which tool invocations trigger your hook. Without matchers, hooks run on every tool use of that type:
 
 ```json
 {
@@ -80,7 +84,7 @@ Hooks receive context via environment variables:
 
 ## Exit Codes
 
-Control hook behavior with exit codes:
+Your hook's exit code tells Claude Code how to proceed. This is how you can block dangerous operations:
 
 | Exit Code | Effect |
 |-----------|--------|
@@ -102,6 +106,8 @@ Hooks can return JSON for advanced control:
 ```
 
 ## Examples
+
+These examples show common hook patterns. Copy and adapt them for your workflow:
 
 ### Auto-format on Write
 
@@ -184,7 +190,9 @@ Hooks timeout after 60 seconds by default. Configure per-hook:
 
 ## Security Notes
 
-- Hooks run with your user permissions
-- Review hooks before enabling
-- Be careful with hooks that modify `updatedInput`
-- Direct edits to hook configs require `/hooks` review
+Hooks are powerful, which means they can also be dangerous. Keep these in mind:
+
+- Hooks run with your user permissions — they can do anything you can do
+- Review hooks before enabling, especially from third parties
+- Be careful with hooks that modify `updatedInput` — they change what Claude sees
+- Direct edits to hook configs require `/hooks` review as a safety measure

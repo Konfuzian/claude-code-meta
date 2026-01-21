@@ -6,7 +6,13 @@ sidebar_position: 1
 
 Complete reference for Claude Code commands and slash commands.
 
+This page documents all the ways to invoke and control Claude Code: command-line arguments for starting sessions, slash commands for in-session control, keyboard shortcuts for efficiency, and special syntax like @ mentions.
+
+---
+
 ## CLI Arguments
+
+These options control how Claude Code starts. Use them when launching from your terminal:
 
 ```bash
 claude [options] [prompt]
@@ -22,17 +28,21 @@ claude [options] [prompt]
 | `--version` | Show version |
 | `--help` | Show help |
 
+---
+
 ## Slash Commands
 
-Commands available during a session (type `/` to see all):
+Slash commands are available during a session. Type `/` to see all available commands. They're organized by function:
 
 ### Session Management
+
+Control your conversation state:
 
 | Command | Description |
 |---------|-------------|
 | `/clear` | Reset conversation, start fresh |
-| `/compact [instructions]` | Summarize conversation to free context |
-| `/rewind` | Roll back to previous checkpoint |
+| `/compact [instructions]` | Summarize conversation to free context — use when context is filling up |
+| `/rewind` | Roll back to previous checkpoint — undo recent changes |
 | `/resume` | Continue a previous session |
 
 ### Configuration
@@ -63,19 +73,26 @@ Commands available during a session (type `/` to see all):
 | `/status` | Show session status |
 | `/cost` | Show token usage |
 
+---
+
 ## Keyboard Shortcuts
+
+These shortcuts work during a session. Learning them speeds up your workflow:
 
 | Shortcut | Action |
 |----------|--------|
 | `Esc` (once) | Cancel current action |
-| `Esc Esc` | Open rewind menu |
+| `Esc Esc` | Open rewind menu — most useful shortcut for undoing |
+| `Shift+Tab` | Cycle through modes (normal → plan → auto-accept) |
 | `Ctrl+C` | Interrupt/exit |
 | `Tab` | Autocomplete |
 | `↑/↓` | Navigate history |
 
+---
+
 ## @ Mentions
 
-Reference files and resources with `@`:
+Reference files and resources directly in your prompts with `@`. This ensures Claude includes them in context:
 
 ```
 @src/utils/auth.ts      # Specific file
@@ -83,9 +100,11 @@ Reference files and resources with `@`:
 @https://example.com    # URL (with MCP)
 ```
 
+---
+
 ## Context Modifiers
 
-Add context to your prompts:
+Special prefixes that change how Claude interprets your input:
 
 ```
 # Add instruction to memory
@@ -95,7 +114,11 @@ Add context to your prompts:
 ? what would happen if I deleted this?
 ```
 
+---
+
 ## Examples
+
+Common patterns for using Claude Code effectively:
 
 ### Start with specific task
 

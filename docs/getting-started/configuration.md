@@ -6,11 +6,17 @@ sidebar_position: 3
 
 Customize Claude Code with settings and CLAUDE.md files.
 
+This page covers the two main ways to configure Claude Code: **CLAUDE.md files** (project context and instructions) and **settings files** (permissions, hooks, and preferences).
+
+---
+
 ## CLAUDE.md — Project Memory
 
-CLAUDE.md files provide context and instructions that Claude reads at the start of each session.
+CLAUDE.md files are the most important configuration you can create. They provide context and instructions that Claude reads at the start of each session, teaching it about your project without you having to explain every time.
 
 ### File Locations
+
+CLAUDE.md files can exist at multiple levels. Claude loads all of them, with more specific files adding to the context:
 
 | Location | Scope | Git-tracked |
 |----------|-------|-------------|
@@ -19,9 +25,11 @@ CLAUDE.md files provide context and instructions that Claude reads at the start 
 | `./CLAUDE.local.md` | Project root (local) | No (gitignore) |
 | `./subdir/CLAUDE.md` | Subdirectory | Yes |
 
-Files are loaded hierarchically — subdirectory files extend parent context.
+Files are loaded hierarchically — subdirectory files extend parent context. This means you can have project-wide instructions and subdirectory-specific overrides.
 
 ### What to Include
+
+A good CLAUDE.md explains your project to someone who's never seen it. Here's an example:
 
 ```markdown
 # Project: MyApp
@@ -47,17 +55,23 @@ Files are loaded hierarchically — subdirectory files extend parent context.
 
 ### Quick Add
 
-Add instructions on the fly:
+You can add instructions during a session without editing files. Lines starting with `#` are added to session memory:
 
 ```
 # Always use async/await instead of .then()
 ```
 
-Lines starting with `#` are added to session memory.
+This is useful when you notice Claude making a repeated mistake — add a quick correction on the fly.
+
+---
 
 ## Settings Files
 
+Settings files configure Claude Code's behavior: permissions, hooks, model preferences, and more. They're JSON files at specific locations.
+
 ### Locations
+
+Settings are merged from multiple files, with higher-precedence files overriding lower ones:
 
 | File | Scope | Precedence |
 |------|-------|------------|
@@ -67,6 +81,8 @@ Lines starting with `#` are added to session memory.
 | `managed-settings.json` | Enterprise | 4 (highest) |
 
 ### Common Settings
+
+Here's an example settings file showing the most useful options:
 
 ```json
 {
@@ -92,23 +108,29 @@ Lines starting with `#` are added to session memory.
 }
 ```
 
+---
+
 ## Environment Variables
+
+These environment variables configure Claude Code at the system level:
 
 | Variable | Purpose |
 |----------|---------|
-| `ANTHROPIC_API_KEY` | API authentication |
-| `CLAUDE_MODEL` | Default model |
-| `MAX_MCP_OUTPUT_TOKENS` | MCP response limit |
+| `ANTHROPIC_API_KEY` | API authentication — required if not using OAuth |
+| `CLAUDE_MODEL` | Default model — override the default Sonnet |
+| `MAX_MCP_OUTPUT_TOKENS` | MCP response limit — control context usage from MCP tools |
+
+---
 
 ## Generating CLAUDE.md
 
-Use the `/init` command to auto-generate a CLAUDE.md by analyzing your codebase:
+Don't want to write CLAUDE.md from scratch? Use the `/init` command to auto-generate one by analyzing your codebase:
 
 ```
 /init
 ```
 
-Claude will scan your project and create a starter CLAUDE.md with detected patterns.
+Claude will scan your project and create a starter CLAUDE.md with detected patterns, tech stack, and common commands. You can then refine it.
 
 ## Next Steps
 

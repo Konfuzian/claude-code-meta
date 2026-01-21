@@ -6,6 +6,14 @@ sidebar_position: 2
 
 Model Context Protocol (MCP) extends Claude Code with external tools and data sources.
 
+## What This Page Covers
+
+This page teaches you how to connect Claude Code to external services using MCP (Model Context Protocol). You'll learn how to give Claude access to GitHub, databases, file systems, and more.
+
+**Why use MCP?** Claude Code's built-in tools handle code editing and terminal commands. MCP adds capabilities that require external connections — like creating GitHub issues, querying databases, or accessing Google Drive.
+
+---
+
 ## What is MCP?
 
 MCP is an open standard by Anthropic that allows Claude to interact with external systems:
@@ -18,7 +26,11 @@ MCP is an open standard by Anthropic that allows Claude to interact with externa
 
 Claude Code acts as both an MCP **client** (connecting to servers) and **server** (exposable to other tools).
 
+---
+
 ## Getting Started with MCP
+
+This section walks you through the process of adding an MCP server to Claude Code. Once configured, the server's tools become available in your conversations.
 
 To use MCP with Claude Code, you need to:
 
@@ -29,7 +41,7 @@ To use MCP with Claude Code, you need to:
 
 ### Tutorial: Setting Up the Filesystem MCP Server
 
-Let's walk through setting up the filesystem MCP server, which gives Claude access to read and write files in specified directories.
+This hands-on tutorial walks through a complete MCP setup. The filesystem server is a good starting point because it's simple and immediately useful.
 
 **Step 1: Create the configuration file**
 
@@ -87,7 +99,11 @@ Here's what's in notes.txt: ...
 You can specify multiple directories by adding more paths to the `args` array. The server will only have access to the directories you explicitly list.
 :::
 
+---
+
 ## Configuration
+
+MCP servers are configured in JSON files. Project-level configs are shared with your team; user-level configs are personal.
 
 ### Project-level (`.claude/mcp.json`)
 
@@ -116,7 +132,11 @@ You can specify multiple directories by adding more paths to the `args` array. T
 
 Same format, applies to all projects.
 
+---
+
 ## Available MCP Servers
+
+Anthropic provides official MCP servers for common integrations. Community servers extend this further.
 
 ### Official Anthropic Servers
 
@@ -134,9 +154,11 @@ Same format, applies to all projects.
 
 Find more at [MCP Servers Directory](https://github.com/modelcontextprotocol/servers).
 
+---
+
 ## Using MCP Tools
 
-Once configured, MCP tools are automatically available to Claude:
+Once configured, MCP tools appear automatically in Claude's available tools. You don't need special syntax — just describe what you want and Claude will use the appropriate tool.
 
 ```
 You: create a GitHub issue for the bug we just found
@@ -148,7 +170,7 @@ Created issue #42: "Auth token refresh not implemented"
 
 ### @ Mentions for Resources
 
-Reference MCP resources directly:
+Some MCP servers expose "resources" — data sources you can reference directly in your messages using `@` syntax:
 
 ```
 @github:owner/repo#123    # GitHub issue
@@ -157,15 +179,17 @@ Reference MCP resources directly:
 
 ### MCP Prompts
 
-Access server-provided prompts:
+Some MCP servers provide pre-built prompts you can invoke directly:
 
 ```
 /mcp__github__review_pr 123
 ```
 
+---
+
 ## Token Limits
 
-MCP responses have token limits to prevent context overflow:
+MCP responses can be large (database query results, file contents, API responses). These limits prevent MCP output from consuming your entire context window:
 
 | Setting | Default | Purpose |
 |---------|---------|---------|
@@ -176,11 +200,13 @@ Configure via `MAX_MCP_OUTPUT_TOKENS` environment variable.
 
 ## Tool Search
 
-When MCP tool descriptions exceed 10% of the context window, Claude Code enables **Tool Search** — dynamically loading tools on-demand rather than including all descriptions upfront.
+When you have many MCP servers configured, their tool descriptions can consume significant context. **Tool Search** is an optimization that loads tool definitions on-demand rather than including all of them upfront. It activates automatically when MCP tool descriptions exceed 10% of the context window.
+
+---
 
 ## Permissions
 
-Control MCP access in settings:
+You can pre-approve or block specific MCP tools using permission rules. This reduces prompts for trusted tools and prevents access to dangerous ones:
 
 ```json
 {
@@ -198,9 +224,11 @@ Control MCP access in settings:
 
 Use wildcards (`mcp__server__*`) for bulk permissions.
 
+---
+
 ## Debugging
 
-View MCP server logs:
+When MCP servers don't work as expected, these commands help diagnose the issue:
 
 ```bash
 claude --mcp-debug

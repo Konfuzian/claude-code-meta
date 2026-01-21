@@ -6,7 +6,17 @@ sidebar_position: 3
 
 Keep your system secure while using Claude Code.
 
+## What This Page Covers
+
+This page explains Claude Code's security model and how to configure it for your environment. You'll learn about permissions, sandboxing, sensitive file handling, and audit trails.
+
+**Why this matters:** Claude Code can run commands and modify files on your system. Understanding the security model helps you use it confidently while maintaining appropriate controls.
+
+---
+
 ## Permission Model
+
+By default, Claude Code asks for permission before potentially dangerous operations. This section explains the default behavior and how to respond to permission prompts.
 
 Claude Code asks permission before potentially dangerous operations:
 
@@ -20,12 +30,17 @@ Claude Code asks permission before potentially dangerous operations:
 
 ### Permission Prompts
 
-When Claude asks for permission, you can:
+When Claude asks for permission, you have three choices:
+
 - **Allow once** — Just this time
 - **Allow always** — For this session
 - **Deny** — Block the action
 
+---
+
 ## Pre-approving Safe Commands
+
+If you find yourself repeatedly approving the same commands, you can pre-approve them in settings. This reduces interruptions while maintaining security for truly dangerous operations.
 
 Reduce prompts by pre-approving common commands:
 
@@ -48,6 +63,8 @@ Reduce prompts by pre-approving common commands:
 
 ### Pattern Syntax
 
+Patterns use wildcards to match multiple commands or paths:
+
 | Pattern | Matches |
 |---------|---------|
 | `Bash(npm *)` | Any npm command |
@@ -55,7 +72,11 @@ Reduce prompts by pre-approving common commands:
 | `mcp__github__*` | All GitHub MCP tools |
 | `Bash(git log *)` | git log with any args |
 
+---
+
 ## Denying Dangerous Operations
+
+Deny rules explicitly block dangerous operations, even if they would otherwise be allowed. This provides a safety net against mistakes.
 
 Block risky commands:
 
@@ -73,9 +94,13 @@ Block risky commands:
 }
 ```
 
-Deny rules take precedence over allow rules.
+**Important:** Deny rules take precedence over allow rules. This means you can broadly allow a category and then deny specific dangerous patterns within it.
+
+---
 
 ## Sandboxing
+
+Sandboxing restricts Claude Code to specific directories and network hosts. This provides OS-level isolation beyond permission prompts.
 
 Sandboxing isolates Claude Code's file and network access, reducing permission prompts by ~84%.
 
@@ -109,6 +134,8 @@ Or in settings:
 
 ### What Sandboxing Controls
 
+When sandboxing is enabled, operations outside the sandbox are blocked automatically:
+
 | Aspect | Restriction |
 |--------|-------------|
 | **Filesystem** | Limited to allowed paths |
@@ -117,15 +144,21 @@ Or in settings:
 
 ### Benefits
 
+Sandboxing provides several advantages:
+
 - Fewer permission prompts
 - Reduced risk of accidental damage
 - Clear boundaries for Claude's access
 
+---
+
 ## Sensitive Files
+
+API keys, passwords, and other secrets should never be accessible to Claude or committed to git. This section covers how to protect sensitive information.
 
 ### Never Commit Secrets
 
-Exclude sensitive files from Claude's access:
+Block access to files that might contain secrets:
 
 ```json
 {
@@ -143,7 +176,7 @@ Exclude sensitive files from Claude's access:
 
 ### Environment Variables
 
-Use environment variables instead of hardcoded secrets:
+Instead of putting secrets in files, use environment variables. Claude can reference them without seeing their values:
 
 ```bash
 # Set in your shell, not in code
@@ -161,11 +194,15 @@ Reference in MCP configs:
 }
 ```
 
+---
+
 ## Hook Security
+
+Hooks execute shell commands with your user permissions. Malicious or poorly-written hooks can be dangerous.
 
 ### Review Hooks
 
-Hooks run with your user permissions. Always review before enabling:
+Always review hooks before enabling them:
 
 ```
 /hooks
@@ -173,7 +210,7 @@ Hooks run with your user permissions. Always review before enabling:
 
 ### Dangerous Hook Patterns
 
-Avoid:
+Be wary of these patterns:
 - Hooks that modify `updatedInput` without validation
 - Hooks that run arbitrary commands from user input
 - Hooks with excessive permissions
@@ -182,7 +219,11 @@ Avoid:
 
 Direct edits to hook configs require review via `/hooks` command.
 
+---
+
 ## Skip Permissions Flag
+
+The `--dangerously-skip-permissions` flag bypasses all permission checks. As the name suggests, this is dangerous and should only be used in isolated environments.
 
 ```bash
 claude --dangerously-skip-permissions
@@ -194,6 +235,8 @@ claude --dangerously-skip-permissions
 - Intended only for controlled CI/CD environments
 
 ### Safe CI/CD Usage
+
+If you must use this flag in CI/CD, ensure proper isolation:
 
 ```yaml
 # Only in isolated CI environments
@@ -207,13 +250,18 @@ jobs:
       - run: claude --dangerously-skip-permissions -p "run tests"
 ```
 
-Ensure:
+Ensure these protections are in place:
+
 - Isolated container/VM
 - No access to production credentials
 - Limited network access
 - Read-only access where possible
 
+---
+
 ## Audit Trail
+
+Claude Code provides several ways to review what happened during sessions. This is useful for debugging and security reviews.
 
 ### Session Logs
 
@@ -225,7 +273,7 @@ Claude Code logs sessions for review:
 
 ### Git as Audit
 
-All file changes are visible via git:
+Git provides a complete record of all file changes:
 
 ```bash
 git diff              # See proposed changes
@@ -233,9 +281,11 @@ git log --oneline     # Review commit history
 git reflog            # Full operation history
 ```
 
+---
+
 ## Enterprise Controls
 
-For team deployments, use managed settings:
+Organizations can enforce security policies that users cannot override. This is useful for team deployments with consistent security requirements.
 
 ```json
 // managed-settings.json (cannot be overridden)

@@ -6,7 +6,17 @@ sidebar_position: 6
 
 Connect Claude Code with GitHub for PR reviews, issue management, and CI/CD.
 
+## What This Page Covers
+
+This page shows you how to integrate Claude Code with GitHub for automated code reviews, issue triage, and CI/CD workflows. You'll learn about the GitHub App, Actions integration, and MCP server.
+
+**Why integrate with GitHub?** Claude Code can review PRs, respond to issue comments, and automate repository workflows. This extends Claude's capabilities beyond your local terminal to your team's collaboration platform.
+
+---
+
 ## GitHub App
+
+The GitHub App enables `@claude` mentions directly in GitHub issues and PRs — no terminal needed.
 
 ### Installation
 
@@ -22,7 +32,7 @@ This installs the Claude Code GitHub App on your repositories, enabling:
 
 ### @claude Mentions
 
-Mention `@claude` in any issue or PR comment:
+Once installed, you can mention `@claude` in any issue or PR comment. Claude will respond with analysis, suggestions, or explanations:
 
 ```
 @claude can you review this PR and check for security issues?
@@ -32,9 +42,11 @@ Mention `@claude` in any issue or PR comment:
 @claude suggest how to fix this bug
 ```
 
+---
+
 ## Local Code Review
 
-Review changes without GitHub:
+You can also review code locally without the GitHub App. This works with your git diff directly:
 
 ```
 /code-review
@@ -44,7 +56,7 @@ Reviews your current git diff and provides feedback.
 
 ### PR Comments
 
-Post review directly to a PR:
+You can post Claude's review directly to GitHub as PR comments:
 
 ```
 /code-review --comment
@@ -56,11 +68,15 @@ Or specify a PR number:
 /code-review --pr 123
 ```
 
+---
+
 ## GitHub Actions
+
+GitHub Actions let you run Claude Code automatically on repository events (PRs opened, issues created, releases published).
 
 ### Claude Code Action
 
-Add AI-powered automation to your workflows:
+The `anthropics/claude-code-action` runs Claude in your CI/CD pipeline:
 
 ```yaml
 # .github/workflows/claude-review.yml
@@ -88,6 +104,8 @@ jobs:
 
 ### Available Inputs
 
+These inputs configure how the action runs:
+
 | Input | Description | Required |
 |-------|-------------|----------|
 | `anthropic_api_key` | API key | Yes |
@@ -97,7 +115,11 @@ jobs:
 
 ### Example Workflows
 
+These examples show common automation patterns. Copy and adapt them for your repository:
+
 #### Auto-label Issues
+
+Automatically categorize new issues based on their content:
 
 ```yaml
 on:
@@ -120,6 +142,8 @@ jobs:
 
 #### Generate Release Notes
 
+Automatically create release notes from commit history:
+
 ```yaml
 on:
   release:
@@ -140,9 +164,11 @@ jobs:
             - Breaking Changes
 ```
 
+---
+
 ## GitHub MCP Server
 
-For full GitHub API access, use the GitHub MCP server:
+For full GitHub API access from within Claude Code sessions, configure the GitHub MCP server. This lets Claude create issues, PRs, and comments on your behalf:
 
 ```json
 // .claude/mcp.json
@@ -161,6 +187,8 @@ For full GitHub API access, use the GitHub MCP server:
 
 ### Available Operations
 
+These tools become available in your Claude Code sessions once the MCP server is configured:
+
 | Tool | Description |
 |------|-------------|
 | `create_issue` | Create new issue |
@@ -174,6 +202,8 @@ For full GitHub API access, use the GitHub MCP server:
 
 ### Example Usage
 
+Once configured, you can ask Claude to interact with GitHub using natural language:
+
 ```
 You: create an issue for the auth bug we discussed
 
@@ -184,7 +214,11 @@ Created issue #42: "Auth token refresh causes logout"
 https://github.com/user/repo/issues/42
 ```
 
+---
+
 ## Best Practices
+
+Keep these security and workflow practices in mind when integrating Claude with GitHub:
 
 1. **Scope permissions** — Only install the app on needed repos
 2. **Use secrets** — Never commit API keys; use GitHub secrets

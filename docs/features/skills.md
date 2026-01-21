@@ -6,6 +6,14 @@ sidebar_position: 5
 
 Create reusable slash commands to automate common tasks.
 
+## What This Page Covers
+
+This page teaches you how to create custom slash commands (called "skills") that extend Claude Code's capabilities. You'll learn to build your own `/review`, `/deploy`, or any other command that fits your workflow.
+
+**Why create custom commands?** Instead of typing the same detailed prompts repeatedly, you define them once as markdown files. Then you just type `/yourcommand` and Claude executes your predefined workflow.
+
+---
+
 ## What are Skills?
 
 Skills are custom slash commands defined in markdown files. They let you:
@@ -15,7 +23,11 @@ Skills are custom slash commands defined in markdown files. They let you:
 - Automate repetitive prompts
 - Build complex multi-step processes
 
+---
+
 ## Creating Commands
+
+Commands are markdown files that contain prompts Claude will execute. The filename becomes the command name.
 
 ### Basic Command
 
@@ -31,9 +43,11 @@ Review the current git diff and provide feedback on:
 Be concise and actionable.
 ```
 
-Use it with `/review`.
+Use it with `/review`. The file's content becomes Claude's instructions.
 
 ### Command with Arguments
+
+Commands can accept arguments using the `$ARGUMENTS` variable. Whatever the user types after the command name gets substituted into the prompt.
 
 Create `.claude/commands/test.md`:
 
@@ -54,16 +68,24 @@ Use the existing test patterns in this codebase.
 
 Use it with `/test src/utils/auth.ts`.
 
+---
+
 ## File Locations
+
+Commands can be stored at two levels, depending on whether you want them shared with your team or personal:
 
 | Location | Scope | Access |
 |----------|-------|--------|
 | `.claude/commands/*.md` | Project | Team (git-tracked) |
 | `~/.claude/commands/*.md` | Global | Personal |
 
+**Project commands** go in your repo and are shared with teammates. **Global commands** live in your home directory and work across all projects.
+
+---
+
 ## Advanced: Skills with Auto-Invocation
 
-Skills are enhanced commands that can trigger automatically.
+Skills are enhanced commands that can trigger automatically based on natural language patterns. While basic commands require `/commandname`, skills can respond to phrases like "review this PR" or "deploy to staging".
 
 ### Creating a Skill
 
@@ -98,6 +120,8 @@ When reviewing a pull request:
 
 ### Skill Structure
 
+Skills live in their own directories, allowing you to include supporting files like templates and examples:
+
 ```
 .claude/skills/
 ├── pr-review/
@@ -108,7 +132,11 @@ When reviewing a pull request:
     └── SKILL.md
 ```
 
+---
+
 ## YAML Frontmatter
+
+Frontmatter is the YAML block at the top of your command file (between `---` markers). It configures metadata like the command name, description, and trigger phrases.
 
 Configure commands with frontmatter:
 
@@ -126,7 +154,11 @@ arguments:
 ---
 ```
 
+---
+
 ## Built-in Variables
+
+These variables are automatically populated by Claude Code and can be used in your command templates:
 
 | Variable | Description |
 |----------|-------------|
@@ -135,9 +167,17 @@ arguments:
 | `$FILE` | Current file path |
 | `$PROJECT` | Project root path |
 
+Use these to make commands context-aware. For example, `$SELECTION` lets you create commands that operate on highlighted code in your IDE.
+
+---
+
 ## Examples
 
+These examples show common patterns for custom commands. Use them as starting points for your own.
+
 ### Commit Message Generator
+
+Generates conventional commit messages from your staged changes.
 
 `.claude/commands/commit.md`:
 
@@ -157,6 +197,8 @@ Output only the commit message, nothing else.
 ```
 
 ### Documentation Generator
+
+Creates comprehensive documentation for any file in your project.
 
 `.claude/commands/docs.md`:
 
@@ -178,6 +220,8 @@ Match the existing documentation style in this project.
 
 ### Refactoring Assistant
 
+Analyzes code and suggests improvements without making changes immediately.
+
 `.claude/commands/refactor.md`:
 
 ```markdown
@@ -196,7 +240,11 @@ Focus on:
 Don't make changes yet - just provide suggestions.
 ```
 
+---
+
 ## Plugin Marketplace
+
+The plugin marketplace lets you install pre-built commands created by the community, saving you from writing everything yourself.
 
 Install community commands:
 
