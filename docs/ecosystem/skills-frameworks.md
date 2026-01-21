@@ -53,6 +53,49 @@ The core insight: AI agents can learn reusable capabilities by reading markdown 
 | `/superpowers:execute-plan` | Execute in batches with oversight |
 | `/superpowers:tdd` | Strict RED-GREEN-REFACTOR cycle |
 
+### Typical Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. BRAINSTORM                                                  │
+│     /superpowers:brainstorm "Add user authentication"           │
+│     → Claude asks clarifying questions (OAuth? JWT? Sessions?)  │
+│     → You refine requirements through dialogue                  │
+│     → Output: Clear understanding of what to build              │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  2. PLAN                                                        │
+│     /superpowers:write-plan                                     │
+│     → Creates git worktree for isolated work                    │
+│     → Breaks work into 2-5 minute tasks                         │
+│     → Output: PLAN.md with exact file paths and test cases      │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  3. EXECUTE (with mandatory TDD)                                │
+│     /superpowers:execute-plan                                   │
+│     For each task:                                              │
+│       → RED: Write failing test first                           │
+│       → GREEN: Write minimal code to pass                       │
+│       → REFACTOR: Clean up while tests stay green               │
+│       → Checkpoint: Review batch before continuing              │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  4. REVIEW & MERGE                                              │
+│     → Code review against original plan                         │
+│     → All tests must pass                                       │
+│     → Merge worktree back to main branch                        │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Quick TDD cycle (for single features):**
+```bash
+/superpowers:tdd "Add password reset functionality"
+# Claude will enforce RED → GREEN → REFACTOR for each piece
+```
+
 ### The Seven-Phase Workflow
 
 1. **Design Refinement** — Agent asks clarifying questions before coding
@@ -136,6 +179,70 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 | **Debug Mode** | `/gsd:debug` | Systematic debugging with persistent state |
 | **Resume** | `/gsd:resume` | Continue from STATE.md |
 | **Checkpoint** | `/gsd:checkpoint` | Save progress for later |
+
+### Typical Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. INITIALIZE                                                  │
+│     /gsd:new-project                                            │
+│     "I want to build a task management API with auth"           │
+│     → Claude asks questions until it fully understands          │
+│     → Parallel agents research domain (auth patterns, etc.)     │
+│     → Creates: PROJECT.md, REQUIREMENTS.md, ROADMAP.md          │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  2. DISCUSS (per phase)                                         │
+│     /gsd:discuss-phase 1                                        │
+│     → "Should we use JWT or sessions?"                          │
+│     → "REST or GraphQL?"                                        │
+│     → Captures your preferences before planning                 │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  3. PLAN                                                        │
+│     /gsd:plan-phase 1                                           │
+│     → Research implementation approach                          │
+│     → Creates 2-3 atomic task plans in XML format               │
+│     → Verification: plans checked against requirements          │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  4. EXECUTE                                                     │
+│     /gsd:execute-phase 1                                        │
+│     → Fresh 200k-token subagents for each task                  │
+│     → Tasks run in parallel waves                               │
+│     → Atomic git commit after each task                         │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  5. VERIFY                                                      │
+│     /gsd:verify-work 1                                          │
+│     → Manual verification walkthrough                           │
+│     → Test deliverables against requirements                    │
+│     → Failures trigger /gsd:debug automatically                 │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  6. COMPLETE or CONTINUE                                        │
+│     /gsd:complete-milestone  → Archive and tag release          │
+│     /gsd:new-milestone       → Start next version               │
+│     /gsd:discuss-phase 2     → Continue to next phase           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Quick mode (for small tasks):**
+```bash
+/gsd:quick "Add a health check endpoint at /api/health"
+# Skips full planning, uses same context engineering
+```
+
+**Resume after break:**
+```bash
+/gsd:resume
+# Loads STATE.md and continues where you left off
+```
 
 ### The Six-Step Cycle
 

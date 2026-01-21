@@ -84,6 +84,57 @@ claude mcp add claude-flow -- npx -y claude-flow@v3alpha
 npx claude-flow@v3alpha mcp start
 ```
 
+### Typical Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. INITIALIZE SWARM                                            │
+│     npx claude-flow@v3alpha init                                │
+│     → Creates config files and agent definitions                │
+│     → Sets up memory persistence (SQLite or PostgreSQL)         │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  2. DEFINE TASK                                                 │
+│     In Claude Code with MCP connected:                          │
+│     "Refactor the authentication module to use JWT"             │
+│     → Strategic Queen analyzes and breaks down task             │
+│     → Identifies required specialists (Coder, Tester, Security) │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  3. SWARM EXECUTION                                             │
+│     Queen dispatches workers:                                   │
+│       → Researcher: Analyzes existing auth code                 │
+│       → Architect: Designs JWT integration                      │
+│       → Coder(s): Implement changes in parallel                 │
+│       → Tester: Writes and runs tests                           │
+│       → Reviewer: Quality checks                                │
+│     Workers coordinate via consensus algorithms                 │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  4. LEARNING & MEMORY                                           │
+│     → RuVector stores patterns from successful execution        │
+│     → Future similar tasks benefit from learned patterns        │
+│     → Memory persists across sessions                           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Single-task example:**
+```bash
+# In Claude Code with MCP:
+"Use claude-flow to analyze security vulnerabilities in src/auth/"
+# → Queen dispatches Security agent + Analyst for comprehensive review
+```
+
+**Multi-agent parallel work:**
+```bash
+"Use claude-flow to refactor the entire API layer - routes, controllers, and tests"
+# → Queen coordinates Coder, Tester, Documenter working in parallel
+# → Consensus ensures no conflicts
+```
+
 ### Cost Optimization
 
 Smart routing can extend Claude Code subscription by ~250%:
@@ -186,6 +237,70 @@ ralph-reset                             # Clear state/logs
 ralph-validate                          # Check configuration
 ```
 
+### Typical Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. PREPARE REQUIREMENTS                                        │
+│     Write requirements.md (or .docx, .pdf, .json)               │
+│     Include:                                                    │
+│       - Clear feature descriptions                              │
+│       - Acceptance criteria                                     │
+│       - Success signals (what "done" looks like)                │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  2. IMPORT & SETUP                                              │
+│     ralph-import requirements.md my-project                     │
+│     → Converts to Ralph format                                  │
+│     → Creates .ralph/ folder with PROMPT.md, specs/, etc.       │
+│     → ralph-validate to check configuration                     │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  3. START AUTONOMOUS LOOP                                       │
+│     ralph --monitor                                             │
+│     → tmux dashboard shows real-time progress                   │
+│     → Claude works through tasks autonomously                   │
+│     → Each iteration: implement → test → commit → next          │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  4. WALK AWAY (optional)                                        │
+│     Safe to leave overnight:                                    │
+│       - Circuit breaker halts on repeated failures              │
+│       - Rate limiting prevents runaway costs                    │
+│       - Exit detection stops when truly done                    │
+│     Check progress: tmux attach -t ralph                        │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  5. COMPLETION OR RESUME                                        │
+│     On completion:                                              │
+│       → EXIT_SIGNAL triggers automatic stop                     │
+│       → Review commits and test results                         │
+│     On interruption:                                            │
+│       → ralph --continue (within 24 hours)                      │
+│       → Picks up from last state                                │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Overnight development example:**
+```bash
+# Friday evening
+ralph-import feature-spec.md new-dashboard
+cd new-dashboard
+ralph --monitor
+
+# Detach tmux: Ctrl+B, D
+# Go home, sleep
+
+# Saturday morning
+cd new-dashboard
+tmux attach -t ralph
+# Review what Ralph built overnight
+```
+
 ### Project Structure
 
 ```
@@ -267,6 +382,73 @@ The Ralph Playbook documents the original technique that inspired ralph-claude-c
 | **1. Define Requirements** | LLM conversation | Break JTBD into specs, one per topic of concern |
 | **2. Planning** | `PROMPT_plan.md` | Gap analysis: specs vs code → prioritized TODO list |
 | **3. Building** | `PROMPT_build.md` | Implement, test, commit, update plan |
+
+### Typical Workflow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 1: DEFINE REQUIREMENTS (Interactive)                     │
+│                                                                 │
+│  In Claude Code (normal conversation):                          │
+│  "I want to build a mood board app for designers"               │
+│                                                                 │
+│  → Discuss Jobs to Be Done (JTBD)                               │
+│  → Break each JTBD into topics of concern                       │
+│  → For each topic: Claude writes specs/[topic].md               │
+│                                                                 │
+│  Example topics:                                                │
+│    - specs/image-upload.md                                      │
+│    - specs/color-extraction.md                                  │
+│    - specs/layout-engine.md                                     │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 2: PLANNING (Autonomous Loop)                            │
+│                                                                 │
+│  ./loop.sh plan                                                 │
+│  (Uses PROMPT_plan.md)                                          │
+│                                                                 │
+│  Each iteration:                                                │
+│    → Subagents study specs/* and src/*                          │
+│    → Gap analysis: what's specified vs what's implemented       │
+│    → Update IMPLEMENTATION_PLAN.md with prioritized tasks       │
+│    → NO implementation, just planning                           │
+│                                                                 │
+│  Usually completes in 1-2 iterations                            │
+└─────────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────────┐
+│  PHASE 3: BUILDING (Autonomous Loop)                            │
+│                                                                 │
+│  ./loop.sh                                                      │
+│  (Uses PROMPT_build.md)                                         │
+│                                                                 │
+│  Each iteration:                                                │
+│    1. Orient — subagents study specs/*                          │
+│    2. Read plan — study IMPLEMENTATION_PLAN.md                  │
+│    3. Select — pick most important task                         │
+│    4. Investigate — subagents verify not already implemented    │
+│    5. Implement — N subagents for file operations               │
+│    6. Validate — 1 subagent for build/tests (backpressure)      │
+│    7. Update plan — mark done, note discoveries                 │
+│    8. Commit & push                                             │
+│    → Loop ends, context cleared, next iteration starts fresh    │
+│                                                                 │
+│  Ctrl+C to stop; plan is disposable — regenerate if wrong       │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Mode switching:**
+```bash
+# Generate/update the plan
+./loop.sh plan
+
+# Review IMPLEMENTATION_PLAN.md, then build
+./loop.sh
+
+# If plan goes wrong, regenerate it
+./loop.sh plan
+```
 
 ### Key Principles
 
