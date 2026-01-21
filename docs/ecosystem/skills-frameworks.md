@@ -6,6 +6,18 @@ sidebar_position: 4
 
 Methodologies and skill collections for effective AI-assisted development.
 
+## What Are Skills Frameworks?
+
+Skills frameworks provide **structured methodologies** for working with Claude Code. Rather than using Claude Code ad-hoc, these frameworks enforce specific workflows, planning phases, and quality gates.
+
+The key insight behind skills frameworks: AI agents perform better when they follow consistent, well-defined patterns rather than improvising each time. By encoding best practices into "skills" (markdown files that Claude reads), you get more reliable, disciplined results.
+
+This page covers two complementary approaches:
+- **superpowers** — Strict TDD-enforced methodology for production software
+- **get-shit-done** — Context-engineered spec-driven development for solo developers
+
+---
+
 ## superpowers
 
 **An agentic skills framework & software development methodology.**
@@ -18,10 +30,14 @@ superpowers provides a structured approach to AI-assisted development that makes
 
 The core insight: AI agents can learn reusable capabilities by reading markdown "SKILL.md" files that document specific workflows. These become **mandatory** patterns rather than optional suggestions.
 
-**The Iron Law:**
+**The Iron Law** — The non-negotiable principle that defines superpowers:
 > "NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST"
 
+This means Claude will refuse to write implementation code until you have a failing test. This enforcement is what makes superpowers different from simply asking Claude to "use TDD."
+
 ### Key Features
+
+Each feature addresses a specific challenge in AI-assisted development:
 
 | Feature | Description |
 |---------|-------------|
@@ -33,6 +49,8 @@ The core insight: AI agents can learn reusable capabilities by reading markdown 
 | **Marketplace Support** | Install additional skills from community |
 
 ### Available Skills
+
+Skills are organized by category. Each skill is a self-contained workflow that Claude follows when invoked:
 
 | Category | Skills |
 |----------|--------|
@@ -46,6 +64,8 @@ The core insight: AI agents can learn reusable capabilities by reading markdown 
 
 ### Core Commands
 
+These are the primary slash commands you'll use. Each one triggers a specific workflow:
+
 | Command | Purpose |
 |---------|---------|
 | `/superpowers:brainstorm` | Socratic questioning to refine design |
@@ -54,6 +74,8 @@ The core insight: AI agents can learn reusable capabilities by reading markdown 
 | `/superpowers:tdd` | Strict RED-GREEN-REFACTOR cycle |
 
 ### Typical Workflow
+
+This diagram shows the recommended progression through superpowers. Each phase has a specific purpose and output:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -90,13 +112,15 @@ The core insight: AI agents can learn reusable capabilities by reading markdown 
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Quick TDD cycle (for single features):**
+**Quick TDD cycle** — For single features where you want to skip the full planning process:
 ```bash
 /superpowers:tdd "Add password reset functionality"
 # Claude will enforce RED → GREEN → REFACTOR for each piece
 ```
 
 ### The Seven-Phase Workflow
+
+Understanding the full workflow helps you know where you are in the process and what comes next:
 
 1. **Design Refinement** — Agent asks clarifying questions before coding
 2. **Environment Setup** — Isolated branches, dependency verification
@@ -108,15 +132,22 @@ The core insight: AI agents can learn reusable capabilities by reading markdown 
 
 ### TDD Enforcement
 
-The framework enforces strict TDD with the RED-GREEN-REFACTOR cycle:
+The RED-GREEN-REFACTOR cycle is the heart of superpowers. Understanding this pattern is essential:
 
 ```
 1. RED: Write one failing test (must watch it fail)
+   → This proves the test is actually testing something
 2. GREEN: Write minimal code to pass
+   → Only what's needed, nothing more
 3. REFACTOR: Clean up while keeping tests green
+   → Now you can improve the code safely
 ```
 
+The key insight: by watching the test fail first, you prove it's actually testing the right thing. This prevents false confidence from tests that pass for the wrong reasons.
+
 ### Installation
+
+superpowers is installed through the plugin marketplace:
 
 ```bash
 # Register the marketplace
@@ -128,12 +159,16 @@ The framework enforces strict TDD with the RED-GREEN-REFACTOR cycle:
 
 ### When to Use
 
+superpowers shines in these scenarios:
+
 - Production-quality software requiring discipline
 - Projects with existing test infrastructure
 - Teams wanting consistent development standards
 - Extended autonomous operation needs
 
 ### Considerations
+
+Be aware of these tradeoffs before adopting superpowers:
 
 - **Strict methodology** — Skills are MANDATORY, not optional
 - **Learning curve** — Requires adjustment to structured workflow
@@ -150,7 +185,7 @@ The framework enforces strict TDD with the RED-GREEN-REFACTOR cycle:
 
 ### Overview
 
-get-shit-done (GSD) solves **context rot** — the quality degradation that occurs as Claude fills its context window during development sessions. It uses strategic file management to keep main context at 30-40% utilization while spawning parallel subagents with fresh 200k-token contexts.
+While superpowers focuses on TDD discipline, get-shit-done (GSD) tackles a different problem: **context rot** — the quality degradation that occurs as Claude fills its context window during development sessions. It uses strategic file management to keep main context at 30-40% utilization while spawning parallel subagents with fresh 200k-token contexts.
 
 **The Core Problem:**
 > Claude starts hallucinating and making bad decisions when context fills up. GSD keeps you in the "smart zone."
@@ -160,6 +195,8 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 **Adoption:** Trusted by engineers at Amazon, Google, Shopify, and Webflow.
 
 ### Key Features
+
+Each feature addresses a specific aspect of context management or development workflow:
 
 | Feature | Description |
 |---------|-------------|
@@ -172,6 +209,8 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 
 ### Workflow Modes
 
+GSD provides different modes for different situations. Choose based on your task size and needs:
+
 | Mode | Command | Purpose |
 |------|---------|---------|
 | **Full Planning** | `/gsd:new-project` | Complete spec-driven development |
@@ -181,6 +220,8 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 | **Checkpoint** | `/gsd:checkpoint` | Save progress for later |
 
 ### Typical Workflow
+
+This diagram shows the full GSD cycle. Each phase has specific inputs and outputs, creating a clear progression from idea to implementation:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -232,19 +273,21 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**Quick mode (for small tasks):**
+**Quick mode** — For small tasks where full planning is overkill:
 ```bash
 /gsd:quick "Add a health check endpoint at /api/health"
 # Skips full planning, uses same context engineering
 ```
 
-**Resume after break:**
+**Resume after break** — GSD tracks state so you can pick up where you left off:
 ```bash
 /gsd:resume
 # Loads STATE.md and continues where you left off
 ```
 
 ### The Six-Step Cycle
+
+Understanding the cycle helps you know what phase you're in and what comes next. Here's what each step accomplishes:
 
 ```
 1. INITIALIZE → 2. DISCUSS → 3. PLAN → 4. EXECUTE → 5. VERIFY → 6. COMPLETE
@@ -279,6 +322,8 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 
 ### XML Task Structure
 
+GSD uses XML to structure tasks. This format ensures Claude understands exactly what to do, what files to touch, and how to verify success. Here's an example:
+
 ```xml
 <task type="auto">
   <name>Create login endpoint</name>
@@ -293,7 +338,16 @@ get-shit-done (GSD) solves **context rot** — the quality degradation that occu
 </task>
 ```
 
+The XML structure prevents ambiguity — each field has a specific purpose:
+- `name`: What we're building
+- `files`: Which files will be created or modified
+- `action`: Specific implementation instructions
+- `verify`: How to test it works
+- `done`: Success criteria
+
 ### Installation
+
+GSD is installed via npx:
 
 ```bash
 npx get-shit-done-cc
@@ -305,12 +359,14 @@ npx get-shit-done-cc --local   # Install to ./.claude/
 
 ### Configuration
 
-Settings in `.planning/config.json`:
+GSD's behavior is customizable. Settings in `.planning/config.json`:
 - **mode**: `yolo` (auto-approve) or `interactive` (confirm each step)
 - **depth**: `quick`, `standard`, or `comprehensive`
 - **Model Profiles**: quality (Opus), balanced (Sonnet/Opus mix), budget
 
 ### When to Use
+
+GSD is designed for these scenarios:
 
 - Solo development with Claude Code
 - Projects needing clear specifications
@@ -318,6 +374,8 @@ Settings in `.planning/config.json`:
 - Rapid iteration with quality guarantees
 
 ### Considerations
+
+Be aware of these aspects before adopting GSD:
 
 - **Optimized for solo developers** — Not designed for team collaboration
 - **Claude Code specific** — Built specifically for Claude Code
@@ -327,6 +385,8 @@ Settings in `.planning/config.json`:
 ---
 
 ## Comparison
+
+This table highlights the key differences to help you choose the right framework for your needs:
 
 | Aspect | superpowers | get-shit-done |
 |--------|-------------|---------------|
@@ -340,7 +400,7 @@ Settings in `.planning/config.json`:
 | **Strictness** | "Skills are MANDATORY" | Flexible with quick mode |
 | **Best For** | Production software, teams | Solo developers, rapid iteration |
 
-## When to Use Each
+## Decision Guide: When to Use Each
 
 ### Use superpowers when:
 - Building production-quality software
@@ -356,7 +416,7 @@ Settings in `.planning/config.json`:
 
 ## Combining Approaches
 
-These frameworks can complement each other:
+You don't have to choose one exclusively. These frameworks can complement each other by using each for what it does best:
 
 ```
 1. /gsd:new-project     → Create clear specification
