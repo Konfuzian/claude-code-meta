@@ -49,7 +49,21 @@ Contributions welcome! Please:
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Submit a pull request
+4. **Verify the build works before pushing**:
+   ```bash
+   npm run build
+   ```
+5. Submit a pull request
+
+### Build Verification
+
+Always run `npm run build` before committing and pushing changes. The build will catch:
+- MDX syntax errors (e.g., unescaped `<` characters that look like JSX)
+- Broken internal links
+- Invalid frontmatter
+- Missing dependencies
+
+If the build fails locally, it will also fail in CI and your changes won't deploy.
 
 ### Adding Ecosystem Tools
 To add a new tool to the ecosystem section, edit the relevant file in `docs/ecosystem/`.

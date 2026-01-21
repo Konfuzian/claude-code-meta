@@ -180,6 +180,53 @@ Prefer small, focused commits over large batches:
 ❌ "Various auth changes and fixes"
 ```
 
+## Verify Builds Before Pushing
+
+### Why It Matters
+
+A failed build means your changes won't deploy. Always verify locally before pushing:
+
+```bash
+npm run build
+```
+
+### What the Build Catches
+
+- **MDX syntax errors**: Unescaped `<` characters (like `<10` or `<0.05ms`) are interpreted as JSX tags
+- **Broken links**: Internal links to non-existent pages
+- **Invalid frontmatter**: YAML syntax errors in page metadata
+- **Import errors**: Missing or incorrect component imports
+
+### The Workflow
+
+```bash
+# Make your changes
+# ...
+
+# Verify build works
+npm run build
+
+# If successful, commit and push
+git add .
+git commit -m "Your commit message"
+git push
+```
+
+### Common MDX Pitfalls
+
+In MDX (Markdown + JSX), certain characters have special meaning:
+
+```markdown
+# These will FAIL:
+- Response time: <10ms        # Looks like JSX tag
+- Accuracy: <0.05% error      # Looks like JSX tag
+
+# These will WORK:
+- Response time: &lt;10ms     # HTML entity
+- Accuracy: &lt;0.05% error   # HTML entity
+- Response time: less than 10ms  # Plain text
+```
+
 ## Session Hygiene
 
 ### Start Fresh for New Tasks
