@@ -46,17 +46,49 @@ Curated lists and community resources.
 | [safety-net](https://github.com/kenryu42/claude-code-safety-net) | Safety | Command protection | Preventing destructive operations |
 | [everything-claude-code](https://github.com/affaan-m/everything-claude-code) | Configs | Ready-to-use setups | Quick setup with battle-tested configs |
 
-## Feature Matrix
+## What Each Tool Does
 
-| Feature | claude-flow | ralph | superpowers | GSD | safety-net | everything-cc |
-|---------|:-----------:|:-----:|:-----------:|:---:|:----------:|:-------------:|
-| Multi-agent | 54+ | - | subagents | parallel | - | 9 agents |
-| Autonomous loops | yes | yes | - | - | - | - |
-| TDD enforcement | - | optional | mandatory | - | - | workflow |
-| Context management | token routing | - | - | 30-40% target | - | strategies |
-| Memory persistence | vector DB | files/git | - | STATE.md | - | MCP memory |
-| Git protection | - | - | - | - | yes | - |
-| MCP integration | native | - | - | - | - | 15 servers |
+### Orchestration Tools
+
+**[claude-flow](https://github.com/ruvnet/claude-flow)** — Run many Claude agents working together
+- Coordinates 54+ specialized agents (coder, tester, reviewer, etc.)
+- Routes tasks to the right agent automatically
+- Persists memory across sessions via vector database
+- Best for: Large projects needing parallel work streams
+
+**[ralph-claude-code](https://github.com/frankbria/ralph-claude-code)** — Let Claude work autonomously
+- Runs Claude in a loop until the task is done
+- Detects when Claude is stuck or finished
+- Saves progress to git automatically
+- Best for: "Set it and forget it" overnight development
+
+### Development Methodologies
+
+**[superpowers](https://github.com/obra/superpowers)** — Strict discipline for quality code
+- Requires tests before implementation (TDD)
+- Enforces small, focused changes
+- Uses subagents for research without polluting context
+- Best for: Production software where quality matters
+
+**[get-shit-done](https://github.com/glittercowboy/get-shit-done)** — Spec-first rapid development
+- Write specs first, then implement
+- Tracks state in STATE.md for context recovery
+- Targets 30-40% context usage to stay efficient
+- Best for: Solo devs wanting structure without overhead
+
+### Safety & Configuration
+
+**[safety-net](https://github.com/kenryu42/claude-code-safety-net)** — Prevent dangerous commands
+- Blocks destructive git operations (force push, hard reset)
+- Semantic analysis—understands intent, not just command strings
+- Customizable rules for your workflow
+- Best for: Everyone (recommended as a baseline)
+
+**[everything-claude-code](https://github.com/affaan-m/everything-claude-code)** — Ready-to-use configs
+- 9 pre-configured agents for common tasks
+- 15 MCP server integrations
+- Battle-tested hooks and workflows
+- Best for: Quick setup without configuration from scratch
 
 ## Complementary Combinations
 
