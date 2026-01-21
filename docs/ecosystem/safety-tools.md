@@ -222,7 +222,7 @@ cp -r everything-claude-code/skills/* ~/.claude/skills/
 ### Considerations
 
 - **Context Window**: Enabling too many MCPs shrinks 200k context to ~70k
-- **Recommendation**: Maintain 20-30 MCPs configured, enable <10 per project
+- **Recommendation**: Maintain 20-30 MCPs configured, enable &lt;10 per project
 - **API Keys Required**: MCP servers need valid credentials
 - **Selective Adoption**: Evaluate and adapt to your specific stack
 - **Not Plug-and-Play**: Customization required for your workflow

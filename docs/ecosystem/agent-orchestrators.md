@@ -22,7 +22,7 @@ claude-flow transforms Claude Code from a single-agent assistant into a coordina
 |---------|-------------|
 | **54+ Specialized Agents** | Coder, tester, reviewer, architect, security-auditor, performance-engineer, and more |
 | **Swarm Topologies** | Hierarchical (queen-led), mesh networks, ring/star, adaptive hybrid |
-| **Self-Learning (RuVector)** | SONA neural architecture with <0.05ms adaptation |
+| **Self-Learning (RuVector)** | SONA neural architecture with &lt;0.05ms adaptation |
 | **Memory & Persistence** | Vector database with PostgreSQL, cross-session context restoration |
 | **Multi-Provider LLM** | Claude, GPT, Gemini, Cohere, Ollama with automatic failover |
 | **Three-Tier Routing** | Agent Booster (WASM) → Haiku → Sonnet/Opus based on task complexity |
