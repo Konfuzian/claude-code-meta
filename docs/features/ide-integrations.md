@@ -12,6 +12,10 @@ This page explains how to use Claude Code inside your IDE rather than (or in add
 
 **Why use IDE integration?** The terminal CLI is powerful, but IDE integration adds visual diff review, click-to-accept changes, and context from your current selection. Many developers use both.
 
+:::tip Terminal Works Without Any IDE Setup
+You don't need IDE extensions to use Claude Code. The terminal CLI (`claude`) provides full functionality — reading files, writing code, running commands, and more. IDE integrations are optional enhancements for a more visual workflow.
+:::
+
 ---
 
 ## VS Code Extension
