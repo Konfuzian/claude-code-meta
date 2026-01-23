@@ -8,28 +8,20 @@ Create reusable slash commands to automate common tasks.
 
 ## What This Page Covers
 
-This page teaches you how to create custom slash commands (called "skills") that extend Claude Code's capabilities. You'll learn to build your own `/review`, `/deploy`, or any other command that fits your workflow.
+This page teaches you how to extend Claude Code with your own slash commands. There are two approaches:
 
-**Why create custom commands?** Instead of typing the same detailed prompts repeatedly, you define them once as markdown files. Then you just type `/yourcommand` and Claude executes your predefined workflow.
+- **Custom Commands** — Simple markdown files that define prompts. Invoked explicitly with `/commandname`.
+- **Skills** — Enhanced commands with their own directories, supporting files, and optional auto-invocation triggers.
 
----
-
-## What are Skills?
-
-Skills are custom slash commands defined in markdown files. They let you:
-
-- Create project-specific workflows
-- Share commands across teams
-- Automate repetitive prompts
-- Build complex multi-step processes
+**Why create these?** Instead of typing the same detailed prompts repeatedly, you define them once. Then you just type `/yourcommand` and Claude executes your predefined workflow.
 
 ---
 
-## Creating Commands
+# Part 1: Custom Commands
 
-Commands are markdown files that contain prompts Claude will execute. The filename becomes the command name.
+Custom commands are the simplest way to create reusable prompts. They're just markdown files where the filename becomes the command name.
 
-### Basic Command
+## Creating a Command
 
 Create a file at `.claude/commands/review.md`:
 
@@ -45,7 +37,7 @@ Be concise and actionable.
 
 Use it with `/review`. The file's content becomes Claude's instructions.
 
-### Command with Arguments
+## Commands with Arguments
 
 Commands can accept arguments using the `$ARGUMENTS` variable. Whatever the user types after the command name gets substituted into the prompt.
 
@@ -68,11 +60,9 @@ Use the existing test patterns in this codebase.
 
 Use it with `/test src/utils/auth.ts`.
 
----
+## Command Locations
 
-## File Locations
-
-Commands can be stored at two levels, depending on whether you want them shared with your team or personal:
+Commands can be stored at two levels:
 
 | Location | Scope | Access |
 |----------|-------|--------|
@@ -81,13 +71,91 @@ Commands can be stored at two levels, depending on whether you want them shared 
 
 **Project commands** go in your repo and are shared with teammates. **Global commands** live in your home directory and work across all projects.
 
+## Built-in Variables
+
+These variables are automatically populated by Claude Code and can be used in your command templates:
+
+| Variable | Description |
+|----------|-------------|
+| `$ARGUMENTS` | Everything after the command |
+| `$SELECTION` | Currently selected text (IDE) |
+| `$FILE` | Current file path |
+| `$PROJECT` | Project root path |
+
+Use these to make commands context-aware. For example, `$SELECTION` lets you create commands that operate on highlighted code in your IDE.
+
+## Command Examples
+
+These examples show common patterns for custom commands.
+
+### Commit Message Generator
+
+`.claude/commands/commit.md`:
+
+```markdown
+---
+description: Generate a commit message for staged changes
 ---
 
-## Advanced: Skills with Auto-Invocation
+Analyze the staged git changes and generate a commit message.
 
-Skills are enhanced commands that can trigger automatically based on natural language patterns. While basic commands require `/commandname`, skills can respond to phrases like "review this PR" or "deploy to staging".
+Follow these conventions:
+- Start with type: feat|fix|docs|style|refactor|test|chore
+- Keep first line under 72 characters
+- Add body if changes are complex
 
-### Creating a Skill
+Output only the commit message, nothing else.
+```
+
+### Documentation Generator
+
+`.claude/commands/docs.md`:
+
+```markdown
+---
+description: Generate documentation for a file
+---
+
+Generate comprehensive documentation for $ARGUMENTS.
+
+Include:
+- Module overview
+- Function/class documentation
+- Usage examples
+- Parameter descriptions
+
+Match the existing documentation style in this project.
+```
+
+### Refactoring Assistant
+
+`.claude/commands/refactor.md`:
+
+```markdown
+---
+description: Suggest refactoring improvements
+---
+
+Analyze $ARGUMENTS and suggest refactoring improvements.
+
+Focus on:
+- Reducing complexity
+- Improving readability
+- Better separation of concerns
+- Modern patterns for this language
+
+Don't make changes yet - just provide suggestions.
+```
+
+---
+
+# Part 2: Skills
+
+Skills are enhanced commands that live in their own directories. They can include supporting files like templates and examples, and optionally trigger automatically based on natural language patterns.
+
+## Creating a Skill
+
+Skills are defined in a `SKILL.md` file within a named directory:
 
 Create `.claude/skills/pr-review/SKILL.md`:
 
@@ -118,9 +186,9 @@ When reviewing a pull request:
    - Suggestions for improvement
 ```
 
-### Skill Structure
+## Skill Directory Structure
 
-Skills live in their own directories, allowing you to include supporting files like templates and examples:
+Skills live in their own directories, allowing you to include supporting files:
 
 ```
 .claude/skills/
@@ -132,13 +200,26 @@ Skills live in their own directories, allowing you to include supporting files l
     └── SKILL.md
 ```
 
+## Auto-Invocation Triggers
+
+Unlike basic commands that require `/commandname`, skills can respond to natural language. The `triggers` field in the frontmatter defines phrases that activate the skill:
+
+```yaml
 ---
+name: Deploy to Staging
+description: Deploy current branch to staging environment
+triggers:
+  - "deploy staging"
+  - "push to staging"
+  - "deploy to staging"
+---
+```
 
-## YAML Frontmatter
+With these triggers, typing "deploy to staging" in a conversation will automatically invoke this skill.
 
-Frontmatter is the YAML block at the top of your command file (between `---` markers). It configures metadata like the command name, description, and trigger phrases.
+## YAML Frontmatter Options
 
-Configure commands with frontmatter:
+The frontmatter block configures skill metadata:
 
 ```yaml
 ---
@@ -154,97 +235,18 @@ arguments:
 ---
 ```
 
----
-
-## Built-in Variables
-
-These variables are automatically populated by Claude Code and can be used in your command templates:
-
-| Variable | Description |
-|----------|-------------|
-| `$ARGUMENTS` | Everything after the command |
-| `$SELECTION` | Currently selected text (IDE) |
-| `$FILE` | Current file path |
-| `$PROJECT` | Project root path |
-
-Use these to make commands context-aware. For example, `$SELECTION` lets you create commands that operate on highlighted code in your IDE.
+| Field | Purpose |
+|-------|---------|
+| `name` | Display name for the skill |
+| `description` | What the skill does (shown in help) |
+| `triggers` | Natural language phrases that invoke the skill |
+| `arguments` | Named parameters with descriptions and defaults |
 
 ---
 
-## Examples
+# Plugin Marketplace
 
-These examples show common patterns for custom commands. Use them as starting points for your own.
-
-### Commit Message Generator
-
-Generates conventional commit messages from your staged changes.
-
-`.claude/commands/commit.md`:
-
-```markdown
----
-description: Generate a commit message for staged changes
----
-
-Analyze the staged git changes and generate a commit message.
-
-Follow these conventions:
-- Start with type: feat|fix|docs|style|refactor|test|chore
-- Keep first line under 72 characters
-- Add body if changes are complex
-
-Output only the commit message, nothing else.
-```
-
-### Documentation Generator
-
-Creates comprehensive documentation for any file in your project.
-
-`.claude/commands/docs.md`:
-
-```markdown
----
-description: Generate documentation for a file
----
-
-Generate comprehensive documentation for $ARGUMENTS.
-
-Include:
-- Module overview
-- Function/class documentation
-- Usage examples
-- Parameter descriptions
-
-Match the existing documentation style in this project.
-```
-
-### Refactoring Assistant
-
-Analyzes code and suggests improvements without making changes immediately.
-
-`.claude/commands/refactor.md`:
-
-```markdown
----
-description: Suggest refactoring improvements
----
-
-Analyze $ARGUMENTS and suggest refactoring improvements.
-
-Focus on:
-- Reducing complexity
-- Improving readability
-- Better separation of concerns
-- Modern patterns for this language
-
-Don't make changes yet - just provide suggestions.
-```
-
----
-
-## Plugin Marketplace
-
-The plugin marketplace lets you install pre-built commands created by the community, saving you from writing everything yourself.
+The plugin marketplace lets you install pre-built commands and skills created by the community.
 
 Install community commands:
 
