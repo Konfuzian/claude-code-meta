@@ -5,11 +5,20 @@ const sidebars: SidebarsConfig = {
     'intro',
     {
       type: 'category',
+      label: "What's New",
+      items: [
+        'whats-new/index',
+        'whats-new/changelog',
+      ],
+    },
+    {
+      type: 'category',
       label: 'Getting Started',
       items: [
         'getting-started/installation',
         'getting-started/first-session',
         'getting-started/configuration',
+        'getting-started/comparison',
       ],
     },
     {

@@ -112,6 +112,243 @@ Here's a practical workflow for spec-driven development with Claude. When starti
 
 ---
 
+## Spec Templates
+
+These templates provide starting points for common project types. Copy and adapt them for your needs.
+
+### REST API Endpoint Spec
+
+```markdown
+# Spec: User Profile API
+
+## Problem Statement
+Users need to view and update their profile information through the API.
+
+## Requirements
+- GET /api/users/:id - Retrieve user profile
+- PATCH /api/users/:id - Update user profile
+- Only authenticated users can access
+- Users can only modify their own profile (or admins)
+
+## Non-Goals
+- User registration (separate spec)
+- Profile photo upload (phase 2)
+- Account deletion
+
+## API Design
+
+### GET /api/users/:id
+Response:
+```json
+{
+  "id": "uuid",
+  "email": "user@example.com",
+  "name": "User Name",
+  "createdAt": "2024-01-01T00:00:00Z"
+}
+```
+
+### PATCH /api/users/:id
+Request:
+```json
+{
+  "name": "New Name",
+  "email": "new@example.com"
+}
+```
+
+## Open Questions
+- [ ] Should email changes require verification?
+- [ ] Rate limiting requirements?
+
+## Success Criteria
+- [ ] All endpoints return correct status codes
+- [ ] Unauthorized access returns 401/403
+- [ ] Input validation rejects invalid data
+- [ ] Tests cover happy path and error cases
+```
+
+### React Component Spec
+
+```markdown
+# Spec: DataTable Component
+
+## Problem Statement
+Multiple pages need sortable, filterable tables with pagination.
+Currently each page implements its own table logic.
+
+## Requirements
+- Sortable columns (click header to sort)
+- Text filter/search
+- Pagination with configurable page size
+- Row selection (single and multi)
+- Loading and empty states
+- Responsive on mobile
+
+## Non-Goals
+- Inline editing (use separate form)
+- Drag-and-drop row reordering
+- Column resizing
+
+## API Design
+
+```tsx
+interface DataTableProps<T> {
+  data: T[];
+  columns: ColumnDef<T>[];
+  loading?: boolean;
+  pageSize?: number;
+  onRowSelect?: (rows: T[]) => void;
+  onSort?: (column: string, direction: 'asc' | 'desc') => void;
+}
+
+// Usage
+<DataTable
+  data={users}
+  columns={[
+    { key: 'name', header: 'Name', sortable: true },
+    { key: 'email', header: 'Email' },
+    { key: 'role', header: 'Role', sortable: true },
+  ]}
+  onRowSelect={handleSelect}
+/>
+```
+
+## Implementation Approach
+1. Build core table with static data
+2. Add sorting logic
+3. Add pagination
+4. Add filtering
+5. Add selection
+6. Add loading/empty states
+7. Mobile responsive styling
+
+## Success Criteria
+- [ ] Works with 1000+ rows without lag
+- [ ] Keyboard accessible (tab through, enter to select)
+- [ ] Matches existing design system
+- [ ] Unit tests for sort/filter/pagination logic
+```
+
+### CLI Tool Spec
+
+````markdown
+# Spec: Database Backup CLI
+
+## Problem Statement
+Manual database backups are error-prone and inconsistent.
+Need automated tool for daily backups with retention policy.
+
+## Requirements
+- Backup PostgreSQL database to S3
+- Compression with gzip
+- Encryption at rest
+- Retention: 7 daily, 4 weekly, 12 monthly
+- Notifications on failure
+- Dry-run mode
+
+## Non-Goals
+- GUI interface
+- Restore functionality (separate tool)
+- Other database types
+
+## CLI Interface
+
+```bash
+# Basic backup
+db-backup --database myapp --bucket s3://backups
+
+# With all options
+db-backup \
+  --database myapp \
+  --bucket s3://backups \
+  --retention 7d,4w,12m \
+  --notify slack:#ops \
+  --dry-run
+
+# Scheduled via cron
+0 2 * * * db-backup --database myapp --bucket s3://backups
+```
+
+## Configuration File
+
+```yaml
+# .db-backup.yml
+database: myapp
+bucket: s3://company-backups/myapp
+retention:
+  daily: 7
+  weekly: 4
+  monthly: 12
+notifications:
+  slack: "#ops-alerts"
+  email: "ops@company.com"
+```
+
+## Success Criteria
+- [ ] Backup completes in <5 minutes for 10GB database
+- [ ] Restore tested and documented
+- [ ] Failures trigger notifications within 1 minute
+- [ ] Old backups cleaned up automatically
+````
+
+### Refactoring Spec
+
+````markdown
+# Spec: Extract Payment Processing Module
+
+## Problem Statement
+Payment logic is scattered across 5 files with duplicated validation.
+Changes require touching multiple files and often break.
+
+## Current State
+- `checkout.ts` - Credit card processing
+- `subscription.ts` - Recurring payments
+- `refund.ts` - Refund processing
+- `webhook.ts` - Stripe webhook handling
+- `utils/money.ts` - Currency formatting
+
+## Target State
+
+```
+src/
+├── payments/
+│   ├── index.ts           # Public API
+│   ├── processor.ts       # Core payment logic
+│   ├── validators.ts      # Input validation
+│   ├── stripe-client.ts   # Stripe API wrapper
+│   ├── types.ts           # TypeScript types
+│   └── __tests__/
+│       ├── processor.test.ts
+│       └── validators.test.ts
+├── checkout.ts            # Imports from payments/
+├── subscription.ts        # Imports from payments/
+└── ...
+```
+
+## Migration Steps
+1. Create `payments/types.ts` with shared interfaces
+2. Create `payments/validators.ts` with unified validation
+3. Create `payments/stripe-client.ts` extracting Stripe logic
+4. Create `payments/processor.ts` as main entry point
+5. Update consumers one by one
+6. Remove duplicated code
+7. Add comprehensive tests
+
+## Non-Goals
+- Changing payment provider
+- Adding new payment methods
+- Modifying business logic
+
+## Success Criteria
+- [ ] All existing tests pass
+- [ ] No duplicate validation logic
+- [ ] Single import for payment operations
+- [ ] 80%+ test coverage on new module
+````
+
+---
+
 ## CLAUDE.md as Living Documentation
 
 CLAUDE.md isn't just initial setup — it's a living document you should update as you work. This section shows how to use it effectively.
