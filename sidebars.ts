@@ -21,6 +21,7 @@ const sidebars: SidebarsConfig = {
         'features/ide-integrations',
         'features/hooks',
         'features/skills',
+        'features/plugins',
         'features/github-integration',
       ],
     },

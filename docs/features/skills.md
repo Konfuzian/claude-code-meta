@@ -244,19 +244,6 @@ arguments:
 
 ---
 
-# Plugin Marketplace
+## Next Steps
 
-The plugin marketplace lets you install pre-built commands and skills created by the community.
-
-Install community commands:
-
-```
-/plugin marketplace add anthropics/claude-plugins-official
-/plugin install commit-helper@marketplace
-```
-
-Browse available plugins:
-
-```
-/plugin > Discover
-```
+Once you're comfortable with custom commands and skills, you can package them into shareable plugins. See the [Plugins](./plugins.md) page to learn how to create, publish, and install plugins.
