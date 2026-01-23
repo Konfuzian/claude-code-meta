@@ -59,61 +59,9 @@ Only consider ecosystem tools when you have a specific need that vanilla Claude 
 
 ## Plans and Specifications
 
-One of the most impactful practices for AI-assisted development is **writing plans and specifications before implementation**. This applies whether you're using vanilla Claude Code or any ecosystem tool.
+Writing plans and specifications before implementation significantly improves results with AI-assisted development. This applies whether you're using vanilla Claude Code or any ecosystem tool.
 
-This section explains why planning matters and how to do it effectively — a foundational skill that benefits all AI-assisted development.
-
-### Why Plans Matter
-
-When working with AI agents, clear written specifications serve multiple purposes. Understanding these benefits helps you invest the right amount of effort in planning:
-
-- **Shared context** — The plan becomes a reference point that both you and Claude can refer back to
-- **Reduced hallucination** — Concrete specs anchor Claude's work to defined requirements
-- **Resumable sessions** — When context resets or you start a new session, the plan file brings Claude up to speed instantly
-- **Better decisions** — Writing forces you to think through edge cases before implementation begins
-- **Review checkpoints** — Plans create natural pause points to verify direction before investing in code
-
-### Version Control Your Plans
-
-Just like code, specifications benefit from version control. **Treat specifications like code** — commit them to your repository:
-
-```
-project/
-├── specs/
-│   ├── auth-system.md
-│   ├── api-v2-migration.md
-│   └── performance-optimization.md
-├── CLAUDE.md
-└── src/
-```
-
-Version-controlled plans provide:
-
-- **History** — See how requirements evolved over time
-- **Collaboration** — Team members can review and comment on specs via PRs
-- **Accountability** — Clear record of what was planned vs. what was built
-- **Onboarding** — New contributors understand the "why" behind code decisions
-
-### What to Include in Specs
-
-Not sure what to write? A useful specification typically covers these elements. You don't need all of them for every task — use judgment based on complexity:
-
-1. **Problem statement** — What are we solving and why?
-2. **Requirements** — What must the solution do?
-3. **Non-goals** — What are we explicitly not doing?
-4. **Approach** — High-level technical direction
-5. **Open questions** — Unknowns to resolve during implementation
-6. **Success criteria** — How do we know when it's done?
-
-### Working with Claude
-
-Here's a practical workflow for spec-driven development with Claude. When starting work on a feature:
-
-1. **Create a spec file** in your repo (e.g., `specs/feature-name.md`)
-2. **Discuss the plan with Claude** — ask it to help refine requirements
-3. **Commit the spec** before implementation begins
-4. **Reference the spec** during implementation: "Implement the auth flow as described in specs/auth-system.md"
-5. **Update the spec** if requirements change mid-implementation
+For detailed guidance on spec-driven development, including what to include in specs and how to work with Claude on plans, see [Workflow Tips: Plans and Specifications](/docs/best-practices/workflow-tips#plans-and-specifications).
 
 Many ecosystem tools (like [superpowers](./skills-frameworks) and [get-shit-done](./skills-frameworks)) formalize this pattern with dedicated planning phases and commands.
 
