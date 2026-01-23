@@ -12,6 +12,10 @@ This page shows you how to integrate Claude Code with GitHub for automated code 
 
 **Why integrate with GitHub?** Claude Code can review PRs, respond to issue comments, and automate repository workflows. This extends Claude's capabilities beyond your local terminal to your team's collaboration platform.
 
+:::tip Basic Git Works Out of the Box
+You don't need any of these integrations for basic git operations. Claude Code can commit, push, pull, create branches, and manage your repository using standard git commands — just ask it. The features on this page are optional extras for teams who want deeper GitHub integration.
+:::
+
 ---
 
 ## GitHub App
