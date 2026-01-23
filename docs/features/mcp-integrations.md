@@ -241,3 +241,144 @@ Check server status:
 ```
 /mcp status
 ```
+
+---
+
+## Copy-Paste Configurations
+
+These ready-to-use configurations cover common setups. Copy them to your `.claude/mcp.json` file and adjust as needed.
+
+### GitHub + Filesystem (Common Setup)
+
+Most projects need GitHub access for issues/PRs and filesystem access for external directories:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-filesystem",
+        "/path/to/docs",
+        "/path/to/shared-assets"
+      ]
+    }
+  }
+}
+```
+
+### Database Access (PostgreSQL + SQLite)
+
+For projects that need database querying capabilities:
+
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-postgres"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-sqlite",
+        "--db-path",
+        "./data/app.db"
+      ]
+    }
+  }
+}
+```
+
+### Full Stack Setup (GitHub + Database + Slack)
+
+For team environments with multiple integrations:
+
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-github"],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-postgres"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      }
+    }
+  }
+}
+```
+
+### Browser Automation (Puppeteer)
+
+For web scraping, testing, or automation tasks:
+
+```json
+{
+  "mcpServers": {
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-puppeteer"],
+      "env": {
+        "PUPPETEER_HEADLESS": "true"
+      }
+    }
+  }
+}
+```
+
+### Permissions for MCP Servers
+
+Pre-approve MCP tools you trust to reduce permission prompts. Add this to `.claude/settings.json`:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__github__list_issues",
+      "mcp__github__get_issue",
+      "mcp__github__list_prs",
+      "mcp__github__get_pr_diff",
+      "mcp__github__search_code",
+      "mcp__postgres__query",
+      "mcp__filesystem__read_file",
+      "mcp__filesystem__list_directory"
+    ],
+    "deny": [
+      "mcp__github__delete_*",
+      "mcp__postgres__execute",
+      "mcp__filesystem__delete_file"
+    ]
+  }
+}
+```
+
+:::tip Environment Variables
+Set environment variables in your shell profile (`~/.bashrc`, `~/.zshrc`) or use a tool like `direnv` for project-specific variables. Never commit tokens to your repository.
+:::

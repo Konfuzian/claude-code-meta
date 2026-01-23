@@ -188,6 +188,244 @@ Hooks timeout after 60 seconds by default. Configure per-hook:
 /hooks remove   # Remove hook
 ```
 
+---
+
+## Advanced Examples
+
+These examples demonstrate more sophisticated hook patterns for real-world workflows.
+
+### Conditional Hook: Run Tests Only for Source Files
+
+Only run tests when source files (not tests or configs) are modified:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool_name": "Write", "file_path": "src/**/*.{ts,tsx}" },
+        "command": "npm test -- --related $FILE_PATH --passWithNoTests"
+      }
+    ]
+  }
+}
+```
+
+### Language-Specific Formatters
+
+Apply different formatters based on file extension:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool_name": "Write", "file_path": "*.py" },
+        "command": "black $FILE_PATH && isort $FILE_PATH"
+      },
+      {
+        "matcher": { "tool_name": "Write", "file_path": "*.go" },
+        "command": "gofmt -w $FILE_PATH"
+      },
+      {
+        "matcher": { "tool_name": "Write", "file_path": "*.rs" },
+        "command": "rustfmt $FILE_PATH"
+      },
+      {
+        "matcher": { "tool_name": "Write", "file_path": "*.{ts,tsx,js,jsx}" },
+        "command": "prettier --write $FILE_PATH"
+      }
+    ]
+  }
+}
+```
+
+### Block Dangerous Patterns
+
+Prevent accidental destructive commands:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": { "tool_name": "Bash", "command": "rm -rf *" },
+        "command": "echo 'Blocked: recursive force delete' && exit 2"
+      },
+      {
+        "matcher": { "tool_name": "Bash", "command": "*DROP TABLE*" },
+        "command": "echo 'Blocked: DROP TABLE commands' && exit 2"
+      },
+      {
+        "matcher": { "tool_name": "Bash", "command": "*DELETE FROM*WHERE*" },
+        "command": "echo 'Blocked: DELETE without review' && exit 2"
+      },
+      {
+        "matcher": { "tool_name": "Bash", "command": "git push --force*" },
+        "command": "echo 'Blocked: force push requires manual execution' && exit 2"
+      },
+      {
+        "matcher": { "tool_name": "Bash", "command": "*main*" },
+        "command": "if echo \"$COMMAND\" | grep -qE 'checkout|merge|push.*main'; then echo 'Blocked: main branch operations' && exit 2; fi"
+      }
+    ]
+  }
+}
+```
+
+### Inject Project Context
+
+Add relevant context to every prompt automatically:
+
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "command": "echo '{\"updatedInput\": \"[Context: Branch=$(git branch --show-current 2>/dev/null || echo none), Last commit=$(git log -1 --oneline 2>/dev/null || echo none)] $PROMPT\"}'"
+      }
+    ]
+  }
+}
+```
+
+### Type Checking After TypeScript Changes
+
+Run type checker when TypeScript files change:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool_name": "Write", "file_path": "*.{ts,tsx}" },
+        "command": "npx tsc --noEmit --skipLibCheck 2>&1 | head -20 || true"
+      }
+    ]
+  }
+}
+```
+
+### Lint Staged Files Before Commit
+
+When Claude runs git commit, lint the staged files first:
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": { "tool_name": "Bash", "command": "git commit*" },
+        "command": "npx lint-staged || (echo 'Lint failed - fix issues first' && exit 2)"
+      }
+    ]
+  }
+}
+```
+
+### Notification on Session End
+
+Send a notification when a long session completes:
+
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "command": "osascript -e 'display notification \"Claude Code session ended\" with title \"Session Complete\"'"
+      }
+    ]
+  }
+}
+```
+
+On Linux with `notify-send`:
+
+```json
+{
+  "hooks": {
+    "SessionEnd": [
+      {
+        "command": "notify-send 'Claude Code' 'Session ended'"
+      }
+    ]
+  }
+}
+```
+
+### Auto-Stage Written Files
+
+Automatically stage files that Claude writes:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool_name": "Write" },
+        "command": "git add $FILE_PATH 2>/dev/null || true"
+      }
+    ]
+  }
+}
+```
+
+---
+
+## Debugging Hooks
+
+When hooks don't work as expected, use these techniques:
+
+### Test Hook Commands Manually
+
+Run your hook command directly to verify it works:
+
+```bash
+# Set the environment variable manually
+export FILE_PATH="src/app.ts"
+
+# Run your hook command
+prettier --write $FILE_PATH && eslint --fix $FILE_PATH
+```
+
+### Add Logging to Hooks
+
+Temporarily add logging to understand what's happening:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": { "tool_name": "Write" },
+        "command": "echo \"Hook triggered for: $FILE_PATH\" >> /tmp/claude-hooks.log && prettier --write $FILE_PATH"
+      }
+    ]
+  }
+}
+```
+
+### Check Exit Codes
+
+Verify your commands return correct exit codes:
+
+```bash
+# This should exit 0 (success)
+prettier --write test.ts; echo "Exit code: $?"
+
+# This should exit 2 (block) when you want to prevent an action
+echo "Blocked" && exit 2; echo "Exit code: $?"
+```
+
+### Common Hook Issues
+
+| Problem | Likely Cause | Solution |
+|---------|--------------|----------|
+| Hook never runs | Matcher pattern doesn't match | Check glob patterns with `echo "src/app.ts" | grep "*.ts"` |
+| Hook runs but fails silently | Command not found | Use full paths or ensure tools are in PATH |
+| Hook blocks unexpectedly | Exit code not 0 | Add `|| true` for non-critical commands |
+| Variables empty | Wrong variable name | Check exact variable names: `$FILE_PATH`, not `$FILEPATH` |
+
 ## Security Notes
 
 Hooks are powerful, which means they can also be dangerous. Keep these in mind:

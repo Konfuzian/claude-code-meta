@@ -301,3 +301,304 @@ Organizations can enforce security policies that users cannot override. This is 
   }
 }
 ```
+
+---
+
+## Permission Configurations by Project Type
+
+These ready-to-use configurations balance security with usability for different scenarios.
+
+### Open Source Project
+
+For public repositories where you want to be extra careful:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm run lint)",
+      "Bash(npm run build)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Write(src/**)",
+      "Write(tests/**)",
+      "Write(docs/**)"
+    ],
+    "deny": [
+      "Bash(npm publish*)",
+      "Bash(git push*)",
+      "Bash(git commit*)",
+      "Bash(*token*)",
+      "Bash(*secret*)",
+      "Bash(*password*)",
+      "Read(.env*)",
+      "Write(.env*)",
+      "Write(.github/workflows/*)"
+    ]
+  }
+}
+```
+
+### Internal/Private Project
+
+For trusted environments with more permissive defaults:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(git *)",
+      "Bash(docker compose *)",
+      "Bash(make *)",
+      "Write(src/**)",
+      "Write(tests/**)",
+      "Write(scripts/**)",
+      "mcp__github__*",
+      "mcp__postgres__query"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(sudo *)",
+      "Bash(*production*)",
+      "Bash(*--force*)",
+      "Write(.env.production)",
+      "mcp__postgres__execute",
+      "mcp__*__delete_*"
+    ]
+  }
+}
+```
+
+### Data Science/ML Project
+
+For projects working with datasets and notebooks:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(python *)",
+      "Bash(pip install *)",
+      "Bash(jupyter *)",
+      "Bash(pytest *)",
+      "Write(notebooks/**)",
+      "Write(src/**)",
+      "Write(data/processed/**)",
+      "Read(data/**)"
+    ],
+    "deny": [
+      "Write(data/raw/**)",
+      "Bash(rm -rf data/*)",
+      "Bash(*aws s3 rm*)",
+      "Bash(*DROP TABLE*)",
+      "Read(*credentials*)",
+      "Read(*secret*)"
+    ]
+  }
+}
+```
+
+### DevOps/Infrastructure
+
+For infrastructure-as-code projects (extra caution needed):
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(terraform plan *)",
+      "Bash(terraform fmt *)",
+      "Bash(terraform validate *)",
+      "Bash(kubectl get *)",
+      "Bash(kubectl describe *)",
+      "Bash(helm template *)",
+      "Bash(helm lint *)",
+      "Write(terraform/**)",
+      "Write(kubernetes/**)",
+      "Write(helm/**)"
+    ],
+    "deny": [
+      "Bash(terraform apply*)",
+      "Bash(terraform destroy*)",
+      "Bash(kubectl delete*)",
+      "Bash(kubectl apply*)",
+      "Bash(helm install*)",
+      "Bash(helm upgrade*)",
+      "Bash(*--force*)",
+      "Bash(*production*)",
+      "Read(*.tfvars)",
+      "Read(*secrets*)"
+    ]
+  }
+}
+```
+
+### Full Stack Web App
+
+Balanced configuration for typical web development:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Bash(npm run build)",
+      "Bash(npm test*)",
+      "Bash(npm run lint*)",
+      "Bash(npx prisma *)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(docker compose up*)",
+      "Bash(docker compose down*)",
+      "Write(src/**)",
+      "Write(app/**)",
+      "Write(components/**)",
+      "Write(pages/**)",
+      "Write(tests/**)",
+      "Write(prisma/schema.prisma)"
+    ],
+    "deny": [
+      "Bash(npm publish*)",
+      "Bash(git push --force*)",
+      "Bash(prisma migrate deploy*)",
+      "Bash(docker compose*prod*)",
+      "Write(.env.production)",
+      "Write(.env.local)",
+      "Read(.env.production)"
+    ]
+  }
+}
+```
+
+---
+
+## Security Checklist
+
+Before using `--dangerously-skip-permissions`, verify:
+
+```markdown
+## Pre-flight Security Checklist
+
+### Environment Isolation
+- [ ] Running in a container or VM (not on host machine)
+- [ ] No access to production credentials
+- [ ] No access to sensitive data directories
+- [ ] Network access restricted to necessary hosts only
+
+### Code Safety
+- [ ] Repository doesn't contain secrets in history
+- [ ] .gitignore properly configured
+- [ ] No .env files with real credentials present
+
+### Access Controls
+- [ ] No SSH keys or AWS credentials accessible
+- [ ] No database connection strings to production
+- [ ] No API keys with write/delete permissions
+
+### Monitoring
+- [ ] Session logging enabled
+- [ ] Git history preserved for audit
+- [ ] Ability to roll back changes easily
+
+### Recovery Plan
+- [ ] Recent backup of important data exists
+- [ ] Know how to restore if something goes wrong
+- [ ] Team notified of automated session
+```
+
+---
+
+## Common Security Patterns
+
+### Pattern: Read-Only Database Access
+
+Allow queries but prevent modifications:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "mcp__postgres__query"
+    ],
+    "deny": [
+      "mcp__postgres__execute",
+      "Bash(*INSERT*)",
+      "Bash(*UPDATE*)",
+      "Bash(*DELETE*)",
+      "Bash(*DROP*)",
+      "Bash(*CREATE*)",
+      "Bash(*ALTER*)"
+    ]
+  }
+}
+```
+
+### Pattern: Safe Git Operations
+
+Allow local git work but require manual push:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git branch*)",
+      "Bash(git checkout*)",
+      "Bash(git stash*)",
+      "Bash(git pull*)"
+    ],
+    "deny": [
+      "Bash(git push*)",
+      "Bash(git reset --hard*)",
+      "Bash(git rebase*)",
+      "Bash(git merge*main*)",
+      "Bash(git branch -D*)"
+    ]
+  }
+}
+```
+
+### Pattern: Sandboxed File Access
+
+Restrict file operations to specific directories:
+
+```json
+{
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "allowedPaths": [
+        "${PROJECT_ROOT}/src",
+        "${PROJECT_ROOT}/tests",
+        "${PROJECT_ROOT}/docs",
+        "/tmp/claude-workspace"
+      ]
+    },
+    "network": {
+      "allowedHosts": [
+        "registry.npmjs.org",
+        "api.github.com"
+      ]
+    }
+  },
+  "permissions": {
+    "deny": [
+      "Write(../*)",
+      "Read(../*)"
+    ]
+  }
+}
+```
