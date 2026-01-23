@@ -6,6 +6,16 @@ sidebar_position: 2
 
 Tools for coordinating multiple Claude agents and creating autonomous development workflows.
 
+## TL;DR
+
+| Tool | Best For | Complexity |
+|------|----------|------------|
+| **claude-flow** | Multi-agent parallel work, enterprise teams | High |
+| **ralph-claude-code** | Autonomous overnight development | Medium |
+| **Ralph Playbook** | Learning the methodology | N/A (docs only) |
+
+**Quick decision**: Use claude-flow for parallel agent coordination. Use ralph-claude-code for single-agent autonomous loops.
+
 ## What Are Agent Orchestrators?
 
 Agent orchestrators are tools that manage and coordinate AI agents working on software development tasks. Instead of using Claude Code for one task at a time, these tools enable:
@@ -16,6 +26,36 @@ Agent orchestrators are tools that manage and coordinate AI agents working on so
 - **Safety mechanisms**: Rate limiting, circuit breakers, and exit detection to prevent runaway costs
 
 This page covers three approaches: enterprise-grade multi-agent swarms (claude-flow), autonomous development loops (ralph-claude-code), and the methodology documentation behind the Ralph technique (The Ralph Playbook).
+
+---
+
+## Comparison
+
+This table helps you choose between the two main tools. They solve different problems and are suited for different use cases:
+
+| Aspect | [claude-flow](#claude-flow) | [ralph-claude-code](#ralph-claude-code) |
+|--------|-------------|-------------------|
+| **Architecture** | 54+ agents in swarm topologies | Single-agent autonomous loop |
+| **Scale** | Enterprise, multi-agent | Solo developer, iterative |
+| **Agent Model** | Hierarchical queens + workers | Self-referential feedback loop |
+| **Learning** | RuVector neural architecture | Session persistence via files/git |
+| **Coordination** | 5 consensus algorithms | Circuit breaker + rate limiting |
+| **Complexity** | High (250k+ lines, WASM) | Medium (shell scripts + hooks) |
+| **Best For** | Large codebases, teams | Overnight automated development |
+
+## Decision Guide: When to Use Each
+
+### Use claude-flow when:
+- You need multiple agents working in parallel
+- Tasks have clear subtasks that can run independently
+- You want fine-grained control over agent coordination
+- Working on enterprise-scale codebases
+
+### Use ralph-claude-code when:
+- You have a single complex task with clear completion criteria
+- You want Claude to work autonomously until done
+- You trust the loop to self-correct through iteration
+- Overnight "walk away" development is acceptable
 
 ---
 
@@ -385,36 +425,6 @@ Cost and time implications of autonomous loops:
 - **API Limits**: Claude's 5-hour limit triggers user prompts
 - **Session Expiration**: Default 24-hour expiration on continuity
 - **Clear Completion Criteria**: Essential for successful loops
-
----
-
-## Comparison
-
-This table helps you choose between the two main tools. They solve different problems and are suited for different use cases:
-
-| Aspect | claude-flow | ralph-claude-code |
-|--------|-------------|-------------------|
-| **Architecture** | 54+ agents in swarm topologies | Single-agent autonomous loop |
-| **Scale** | Enterprise, multi-agent | Solo developer, iterative |
-| **Agent Model** | Hierarchical queens + workers | Self-referential feedback loop |
-| **Learning** | RuVector neural architecture | Session persistence via files/git |
-| **Coordination** | 5 consensus algorithms | Circuit breaker + rate limiting |
-| **Complexity** | High (250k+ lines, WASM) | Medium (shell scripts + hooks) |
-| **Best For** | Large codebases, teams | Overnight automated development |
-
-## Decision Guide: When to Use Each
-
-### Use claude-flow when:
-- You need multiple agents working in parallel
-- Tasks have clear subtasks that can run independently
-- You want fine-grained control over agent coordination
-- Working on enterprise-scale codebases
-
-### Use ralph-claude-code when:
-- You have a single complex task with clear completion criteria
-- You want Claude to work autonomously until done
-- You trust the loop to self-correct through iteration
-- Overnight "walk away" development is acceptable
 
 ---
 
