@@ -4,8 +4,9 @@
 
 When done with work:
 1. Run `npm run build` to verify the build passes
-2. Commit changes
-3. Push to remote
+2. Run `npm run check-links` to verify no broken links
+3. Commit changes
+4. Push to remote
 
 Don't ask for permission - just do it.
 
@@ -33,3 +34,14 @@ When making significant changes to the documentation, update the What's New sect
 Unescaped `<` followed by numbers breaks the build (interpreted as JSX):
 - `<10` → use `&lt;10`
 - `<0.05ms` → use `&lt;0.05ms`
+
+### Broken Links
+
+When removing pages or sections:
+- Search for all references to the removed content
+- Update or remove links in navigation, footers, and other pages
+- The `npm run check-links` command catches these before deployment
+
+### Link Checker Configuration
+
+The linkinator config (`linkinator.config.json`) skips paths containing `/claude-code-meta/` because the local build directory doesn't include the baseUrl prefix. External links to the live site are still checked.
