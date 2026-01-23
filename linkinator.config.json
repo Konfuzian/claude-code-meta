@@ -3,7 +3,8 @@
     "https://github.com/.*/edit/.*",
     "https://github.com/.*/new/.*",
     "https://linkedin.com/.*",
-    "https://www.linkedin.com/.*"
+    "https://www.linkedin.com/.*",
+    ".*/claude-code-meta/.*"
   ],
   "timeout": 30000,
   "retry": true,
