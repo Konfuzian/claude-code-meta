@@ -17,12 +17,12 @@ const sidebars: SidebarsConfig = {
       label: 'Features',
       items: [
         'features/cli-commands',
-        'features/mcp-integrations',
         'features/ide-integrations',
+        'features/mcp-integrations',
+        'features/github-integration',
         'features/hooks',
         'features/skills',
         'features/plugins',
-        'features/github-integration',
       ],
     },
     {
@@ -30,8 +30,8 @@ const sidebars: SidebarsConfig = {
       label: 'Best Practices',
       items: [
         'best-practices/workflow-tips',
-        'best-practices/context-management',
         'best-practices/security',
+        'best-practices/context-management',
         'best-practices/tdd-with-claude',
       ],
     },
