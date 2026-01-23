@@ -90,8 +90,6 @@ The JetBrains plugin integrates with native IDE features like the built-in diff 
 
 JetBrains 2025.2+ includes a native MCP server that exposes IDE features (refactoring, navigation, diagnostics) to Claude:
 
-JetBrains 2025.2+ includes a native MCP server for IDE features:
-
 ```json
 {
   "mcpServers": {
