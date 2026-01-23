@@ -224,6 +224,8 @@ You can pre-approve or block specific MCP tools using permission rules. This red
 
 Use wildcards (`mcp__server__*`) for bulk permissions.
 
+For comprehensive security configuration, see [Security Best Practices](/docs/best-practices/security).
+
 ---
 
 ## Debugging

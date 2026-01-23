@@ -83,6 +83,8 @@ When prompted, you can allow once, allow always (for the session), or deny.
 
 To reduce permission prompts, pre-approve common safe operations via `/permissions` or in your settings file.
 
+For comprehensive security configuration, see [Security Best Practices](/docs/best-practices/security).
+
 ## Essential Commands
 
 You'll use these slash commands frequently. Type `/` to see all available commands:

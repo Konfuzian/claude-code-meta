@@ -196,3 +196,5 @@ Hooks are powerful, which means they can also be dangerous. Keep these in mind:
 - Review hooks before enabling, especially from third parties
 - Be careful with hooks that modify `updatedInput` — they change what Claude sees
 - Direct edits to hook configs require `/hooks` review as a safety measure
+
+For comprehensive security configuration, see [Security Best Practices](/docs/best-practices/security).
