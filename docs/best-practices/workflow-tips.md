@@ -286,7 +286,7 @@ notifications:
 ```
 
 ## Success Criteria
-- [ ] Backup completes in <5 minutes for 10GB database
+- [ ] Backup completes in under 5 minutes for 10GB database
 - [ ] Restore tested and documented
 - [ ] Failures trigger notifications within 1 minute
 - [ ] Old backups cleaned up automatically

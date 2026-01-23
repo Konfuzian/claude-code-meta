@@ -31,6 +31,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/Konfuzian/claude-code-meta/tree/main/',
+          breadcrumbs: true,
         },
         blog: {
           showReadingTime: true,
@@ -73,6 +74,7 @@ const config: Config = {
           label: 'Ecosystem',
           position: 'left',
         },
+        {to: "/docs/whats-new/", label: "What's New", position: 'left'},
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/Konfuzian/claude-code-meta',
