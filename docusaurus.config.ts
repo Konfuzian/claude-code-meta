@@ -33,17 +33,7 @@ const config: Config = {
           editUrl: 'https://github.com/Konfuzian/claude-code-meta/tree/main/',
           breadcrumbs: true,
         },
-        blog: {
-          showReadingTime: true,
-          feedOptions: {
-            type: ['rss', 'atom'],
-            xslt: true,
-          },
-          editUrl: 'https://github.com/Konfuzian/claude-code-meta/tree/main/',
-          onInlineTags: 'warn',
-          onInlineAuthors: 'warn',
-          onUntruncatedBlogPosts: 'warn',
-        },
+        blog: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -75,7 +65,6 @@ const config: Config = {
           position: 'left',
         },
         {to: "/docs/whats-new/", label: "What's New", position: 'left'},
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/Konfuzian/claude-code-meta',
           label: 'GitHub',

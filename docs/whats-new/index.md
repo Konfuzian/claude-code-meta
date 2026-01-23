@@ -16,7 +16,6 @@ Stay up to date with the latest changes to Claude Code and this documentation si
 
 ## How to Stay Updated
 
-- **[Blog](/blog)** - Feature announcements and detailed release notes
 - **[GitHub Releases](https://github.com/anthropics/claude-code/releases)** - Official Claude Code releases
 - **[Changelog](./changelog)** - Detailed changelog of documentation updates
 
