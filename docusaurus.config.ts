@@ -64,12 +64,12 @@ const config: Config = {
           label: 'Ecosystem',
           position: 'left',
         },
-        {to: "/docs/whats-new/", label: "What's New", position: 'left'},
         {
           href: 'https://github.com/Konfuzian/claude-code-meta',
           label: 'GitHub',
           position: 'right',
         },
+        {to: "/docs/whats-new/", label: "What's New", position: 'right'},
       ],
     },
     footer: {
